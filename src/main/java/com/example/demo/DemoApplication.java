@@ -1,13 +1,16 @@
-package com.revature.mpliteAPI;
+package com.example.demo;
+
+
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MpliteApiApplication {
+public class DemoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MpliteApiApplication.class, args);
+		SpringApplication.run(DemoApplication.class, args);
 	}
-
+	
+	
 }

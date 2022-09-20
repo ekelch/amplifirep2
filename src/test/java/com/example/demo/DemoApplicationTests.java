@@ -1,10 +1,10 @@
-package com.revature.mpliteAPI;
+package com.example.demo;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MpliteApiApplicationTests {
+class DemoApplicationTests {
 
 	@Test
 	void contextLoads() {
