@@ -3,6 +3,8 @@ package com.revature.service;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.Id;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +42,16 @@ public class UserService {
 			throw new UserNotFoundException("User Not Found");
 		}
 	
-}
+		}
+	
+	public Users getUser(Integer id) throws UserNotFoundException {
+		Optional<Users> user = userRepository.findById(id);
+		
+		if(user.isPresent()) {
+			return user.get();
+		} else {
+			throw new UserNotFoundException("User Not Found");
+		}
+	}
 	
 }
