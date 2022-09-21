@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.persistence.Id;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.revature.model.Users;
@@ -45,7 +46,7 @@ public class UserService {
 			throw new UserNotFoundException("User Not Found");
 		}
 	
-		}
+	}
 	
 	public Users getUser(Integer id) throws UserNotFoundException {
 		Optional<Users> user = userRepository.findById(id);
@@ -56,5 +57,21 @@ public class UserService {
 			throw new UserNotFoundException("User Not Found");
 		}
 	}
+	
+	public void updateUser(Integer id, Users user) throws UserNotFoundException {
+		Users updateUser = this.getUser(id);
+		
+		updateUser.setPassword(user.getPassword());
+		updateUser.setDescription(user.getDescription());
+		updateUser.setZipcode(user.getZipcode());
+		
+		userRepository.save(updateUser);
+	}
+	
+	public void deleteUser(Integer id) throws UserNotFoundException {
+		userRepository.deleteById(id);
+		
+	}
+	
 	
 }
