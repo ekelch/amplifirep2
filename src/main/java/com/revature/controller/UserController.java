@@ -25,21 +25,31 @@ public class UserController {
 	public UserController(UserService userService) {
 		this.userService = userService;
 	}
+	//User Registration
+	@PostMapping("/api/v1/users/")
+	public void register(@RequestBody Users user) {
+		userService.register(user);
+	}
 	
+	
+	//Get a list of users (for admin use)
 	@GetMapping("/api/v1/users/")
 	public List<Users> getUsers(){
 		return userService.getUsers();
 	}
 	
+	//User login authentication
 	@PostMapping("/api/v1/users/login/")
 	public Users login(@RequestBody Users user) throws UserNotFoundException {
 		return userService.login(user);
 		
 	}
 	
+	//Display user information (for home page)
 	@GetMapping("/api/v1/users/{id}")
 	public Users getUser(@PathVariable("id") Integer id) throws UserNotFoundException {
 		return userService.getUser(id);
 	}
+
 	
 }

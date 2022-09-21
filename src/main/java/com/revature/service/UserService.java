@@ -25,6 +25,9 @@ public class UserService {
 	
 	}
 
+	public void register(Users user) {
+		userRepository.saveAndFlush(user);
+	}
 
 	public List<Users> getUsers(){
 		return userRepository.findAll();
