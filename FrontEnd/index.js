@@ -1,7 +1,9 @@
 let banner = document.querySelector("#banner");
 
 //window.addEventListener("load", renderLogin)
-
+function derenderPage(){
+    document.querySelector("body").innerHTML = "";
+}
 function renderLogin(){
     let loginContainer = document.createElement("div");
     loginContainer.id = "login";
@@ -56,10 +58,6 @@ function renderLogin(){
     loginContainer.appendChild(resetButton);
 
     document.querySelector("body").appendChild(loginContainer);
-}
-
-function derenderPage(){
-    document.querySelector("body").innerHTML = "";
 }
 
 function renderHomepage(data){
