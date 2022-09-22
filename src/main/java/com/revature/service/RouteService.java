@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.revature.model.Routes;
+import com.revature.model.Users;
 import com.revature.repository.RouteRepository;
 import com.revature.util.RouteNotFoundException;
 
@@ -29,6 +30,11 @@ public class RouteService {
 		}else {
 			throw new RouteNotFoundException("Route not found");
 		}
+	}
+
+	public Routes register(Routes route) {
+
+		return routeRepository.saveAndFlush(route);
 	}
 
 }
