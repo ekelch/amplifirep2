@@ -72,7 +72,7 @@ async function asyncLogin(){
     let userInput = document.querySelector("#username").value;
     let passInput = document.querySelector("#password").value;
 
-    const url = `http://localhost:8080/api/v1/users/login`;
+    const url = `http://localhost:8080/api/v1/users/login;
 
     let loginObj = {
         username: userInput,
