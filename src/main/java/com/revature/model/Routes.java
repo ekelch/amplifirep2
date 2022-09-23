@@ -24,13 +24,14 @@ public class Routes {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+	private Integer route_id;
+	
+	private String name;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="location_id")
-	private Locations location;
+	private Locations location_id;
 	
-	private String name;
 	private String difficulty;
 	private Integer length;
 	

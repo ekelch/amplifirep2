@@ -1,14 +1,14 @@
 package com.revature.util;
 
-public class RouteNotFoundException extends Exception{
-	
+public class LocationNotFoundException extends Exception {
+
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public RouteNotFoundException(String message) {
+	public LocationNotFoundException(String message) {
 		super(message);
 	}
-
 }
