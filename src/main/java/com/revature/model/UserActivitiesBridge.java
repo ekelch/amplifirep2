@@ -1,7 +1,6 @@
 package com.revature.model;
 
 import javax.persistence.CascadeType;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,24 +14,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table
+@Table(name="user_activities_bridge")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Routes {
-	
+public class UserActivitiesBridge {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer route_id;
+	Integer user_id;
 	
-	private String name;
+	//@OneToOne(cascade = CascadeType.ALL)
+	//@JoinColumn(name="route_id")
+	Integer route_id;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="location_id")
-	private Locations location_id;
-	
-	private String difficulty;
-	private Integer length;
-	
-
+	Integer rating;
+	String status;
 }
