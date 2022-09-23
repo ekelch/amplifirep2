@@ -19,7 +19,7 @@ ul.dawnnav li{
     list-style: none;
     float: left;
 }
-ul.dawnnav li a {
+ul.dawnnav li {
     display: block;
     text-decoration: none;
     min-height: 16px;
@@ -28,7 +28,7 @@ ul.dawnnav li a {
     text-transform: uppercase;
     color: rgb(27, 25, 25);
 }
-ul.dawnnav li a:hover{
+ul.dawnnav li:hover{
     background-color: rgb(72, 137, 158);
     color: rgb(255, 255, 255);
     border-radius: 15px;
