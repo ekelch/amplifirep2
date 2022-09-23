@@ -5,7 +5,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +20,7 @@ import com.revature.service.UserService;
 import com.revature.util.UserNotFoundException;
 
 @RestController
+@CrossOrigin("*")
 public class UserController {
 
 	private final UserService userService;
