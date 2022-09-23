@@ -1,3 +1,4 @@
+const urlBase = 'http://localhost:8080';
 window.addEventListener("load", renderNav());
 // window.addEventListener("load", renderLogin());
 
@@ -15,6 +16,7 @@ function renderNav() {
         navRoutes.addEventListener("click", renderRoutes);
     let navLocations = document.createElement("LI");
         navLocations.innerText = "Locations";
+        navLocations.addEventListener("click", renderLocations);
     let navSearch = document.createElement("LI");
         navSearch.innerText = "Search";
 
@@ -88,7 +90,7 @@ async function asyncLogin(){
     let userInput = document.querySelector("#username").value;
     let passInput = document.querySelector("#password").value;
 
-    const url = `http://localhost:8080/api/v1/users/login`;
+    const path = '/api/v1/users/login';
 
     let loginObj = {
         username: userInput,
@@ -97,7 +99,7 @@ async function asyncLogin(){
 
     try{
         let response = await fetch(
-            url,
+            urlBase + path,
             {
                 method: "POST",
                 headers: new Headers({
@@ -166,7 +168,41 @@ function login_form() {
 
 function renderRoutes() {
     derenderPage();
-    let routeBanner = document.createElement("h1");
-    routeBanner.innerText = "Quinsana Plus";
+    let routeBanner = document.createElement("h1").innerText = "Quinsana Plus";
     document.querySelector("body").append(routeBanner);
+}
+
+async function renderLocations() {
+    derenderPage();
+    let allRoutes = await getLocations();   // returns json array of all locations
+
+    let routeContainer = document.createElement("div");
+    routeContainer.id = "routeContainer";
+    let routeList = document.createElement("ul");
+    routeList.id = "routeList";
+    for (i=0; i<allRoutes.length; i++){
+        let routeItem = document.createElement("li");
+        routeItem.innerText = `${allRoutes[i].locationName}`;
+        routeList.appendChild(routeItem);
+    }
+    routeContainer.appendChild(routeList);
+    document.querySelector("body").appendChild(routeContainer);
+}
+
+async function getLocations() {
+    const path = '/api/v1/locations';
+    try {
+        let response = await fetch(
+            urlBase + path,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
 }
