@@ -4,7 +4,7 @@ import java.util.List;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +18,7 @@ import com.revature.model.Routes;
 
 import com.revature.service.RouteService;
 import com.revature.util.RouteNotFoundException;
-
+@CrossOrigin("http://127.0.0.1:5500/")
 
 @RestController
 public class RouteController {

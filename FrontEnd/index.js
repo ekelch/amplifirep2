@@ -1,6 +1,6 @@
 const urlBase = 'http://localhost:8080';
-window.addEventListener("load", renderNav());
-// window.addEventListener("load", renderLogin());
+
+window.addEventListener("load", renderHome());
 
 function renderNav() {
 
@@ -8,6 +8,9 @@ function renderNav() {
     navigation.className = "navbar";
     let navList = document.createElement("ul");
     navList.className = "dawnnav";
+    let navHome = document.createElement("LI");
+        navHome.innerText = "Home";
+        navHome.addEventListener("click", renderHome);
     let navUsers = document.createElement("LI");
         navUsers.innerText = "Users";
         navUsers.addEventListener("click", renderLogin);
@@ -20,7 +23,7 @@ function renderNav() {
     let navSearch = document.createElement("LI");
         navSearch.innerText = "Search";
 
-    navList.append(navUsers, navRoutes, navLocations, navSearch);
+    navList.append(navHome, navUsers, navRoutes, navLocations, navSearch);
 
     navigation.appendChild(navList);
     document.querySelector("body").appendChild(navigation);
@@ -78,18 +81,10 @@ function derenderPage(){
     renderNav();
 }
 
-function renderHomepage(data){
-    derenderPage();
-    let userbanner = document.createElement("h1");
-    userbanner.innerText = data.username;
-
-    document.querySelector("body").appendChild(userbanner);
-}
-
 async function asyncLogin(){
     let userInput = document.querySelector("#username").value;
     let passInput = document.querySelector("#password").value;
-
+    var data;
     const path = '/api/v1/users/login';
 
     let loginObj = {
@@ -107,13 +102,11 @@ async function asyncLogin(){
                 }),
                 body: JSON.stringify(loginObj)}
         )
-
-        let data = await response.json();
-        console.log(data);
-        renderHomepage(data);
+        user = await response.json();
     }catch(error){
         console.error(`Error is ${error}`);
     }
+    renderUserHome(user);
 }
   
  
@@ -166,31 +159,100 @@ function login_form() {
     .appendChild(form);
 }
 
-function renderRoutes() {
+function renderHome() {
     derenderPage();
-    let routeBanner = document.createElement("h1").innerText = "Quinsana Plus";
-    document.querySelector("body").append(routeBanner);
+    let homediv = document.createElement("div");
+
+    let homebanner = document.createElement("h1");
+    homebanner.innerText = "Welcome to Mountain Project Lite";
+    homediv.appendChild(homebanner);
+
+    let homepic = document.createElement("img");
+    homepic.src = "https://cdn2.apstatic.com/photos/climb/119645726_medium_1601330511.jpg"; 
+    homediv.appendChild(homepic);
+
+    document.querySelector("body").appendChild(homediv);
 }
 
-async function renderLocations() {
+function renderUserHome(user){
     derenderPage();
-    let allRoutes = await getLocations();   // returns json array of all locations
+    let userinfoDiv = document.createElement("div");
+    let userbanner = document.createElement("h1");
+    userbanner.innerText = 'Welcome, ' + user.username + '!';
+    let userpic = document.createElement("img");
+    userpic.id = "userpic";
+    userpic.src = user.photo_url;
+    console.log(user);
 
+    userinfoDiv.append(userbanner, userpic);
+    document.querySelector("body").appendChild(userinfoDiv);
+}
+
+async function renderRoutes() {
+    derenderPage();
+    let allRoutes = await getRoutes();
+
+    console.log(allRoutes)
     let routeContainer = document.createElement("div");
     routeContainer.id = "routeContainer";
     let routeList = document.createElement("ul");
     routeList.id = "routeList";
     for (i=0; i<allRoutes.length; i++){
-        let routeItem = document.createElement("li");
-        routeItem.innerText = `${allRoutes[i].locationName}`;
+        let routeItem = document.createElement("ul");
+        routeItem.innerText = `Route Name: ${allRoutes[i].name}`;
+        let difficulty = document.createElement("li");
+        difficulty.innerText = `Difficulty: ${allRoutes[i].difficulty}`;
+        let length = document.createElement("li");
+        length.innerText = `Length: ${allRoutes[i].length} feet`
+        routeItem.append(difficulty, length);
         routeList.appendChild(routeItem);
     }
     routeContainer.appendChild(routeList);
     document.querySelector("body").appendChild(routeContainer);
+
+}
+
+function renderRouteInfo() {
+
+}
+
+async function renderLocations() {
+    derenderPage();
+    let locations = await getLocations();   // returns json array of all locations
+
+    let locationContainer = document.createElement("div");
+    locationContainer.id = "locationContainer";
+    let locationList = document.createElement("ul");
+    locationList.id = "locationList";
+    for (i=0; i<locations.length; i++){
+        let locationItem = document.createElement("li");
+        locationItem.innerText = `${locations[i].locationName}`;
+        locationList.appendChild(locationItem);
+    }
+    locationContainer.appendChild(locationList);
+    document.querySelector("body").appendChild(locationContainer);
 }
 
 async function getLocations() {
     const path = '/api/v1/locations';
+    try {
+        let response = await fetch(
+            urlBase + path,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+async function getRoutes() {
+    const path = '/api/v1/routes';
     try {
         let response = await fetch(
             urlBase + path,
