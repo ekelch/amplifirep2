@@ -41,7 +41,7 @@ class DemoApplicationTests {
 
 	@Test
 	public void registerTest() {
-		Users user = new Users("user3", "pass3", "user3@email.com", "user testing", 99986);
+		Users user = new Users(null, "user3", "pass3", "user3@email.com", "user testing", 99986, null);
 		when(repository.save(user)).thenReturn(user);
 		assertEquals(user, service.register(user));
 	}

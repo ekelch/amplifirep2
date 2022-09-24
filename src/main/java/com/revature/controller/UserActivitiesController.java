@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.model.UserActivitiesBridge;
@@ -41,34 +42,33 @@ public class UserActivitiesController {
 		return userActivitiesService.getListOfActivitiesById(id);
 	}
 	
-//	@GetMapping("/api/v1/useractivities/{id}/{rating}")
-//	public List<UserActivitiesBridge> getListOfActivitiesByIdAndRating(@PathVariable("id") Integer id, @PathVariable("rating") Integer rating) throws ActivityNotFoundException {
-//		return userActivitiesService.getListOfActivitiesByIdAndRating(id, rating);
+	@GetMapping("/api/v1/useractivities/{id}/{rating}")
+	public List<UserActivitiesBridge> getListOfActivitiesByIdAndRating(@RequestParam("id") Integer id, @RequestParam("rating") Integer rating) throws ActivityNotFoundException {
+		return userActivitiesService.getListOfActivitiesByIdAndRating(id, rating);
+	}
+	
+	//Bugged
+//	@PostMapping("/api/v1/useractivities/{id}/{routeId}")
+//	public UserActivitiesBridge getActivityByIdAndRouteId(@RequestBody UserActivitiesBridge userAct) throws ActivityNotFoundException {
+//		return userActivitiesService.getActivityByIdAndRouteId(userAct);
 //	}
 	
-	
-	//Still needs fixing
+	//List of Activities by Rating
 	@GetMapping("/api/v1/useractivities/rating/{rating}")
+	@ResponseBody
 	public List<UserActivitiesBridge> getListOfActivitiesByRating(@PathVariable("rating") Integer rating) throws ActivityNotFoundException {
 		return userActivitiesService.getListOfActivitiesByRating(rating);
 	}
 	
+	//Update an activity by User ID and Route ID
+	@PutMapping("/api/v1/useractivities/rating/{id}/{routeId}")
+	public void updateUserActivityRating(@PathVariable("Id") Integer id, @PathVariable("routeId") Integer routeId, @RequestBody UserActivitiesBridge uActBridge) throws ActivityNotFoundException {
+		userActivitiesService.updateUserActivityRating(id, routeId, uActBridge);
+	}
 
-//	@PutMapping("/api/v1/useractivities/rating/{id}")
-//	public void updateUserActivityRating(@PathVariable("id") Integer id, @PathVariable Integer rating) throws ActivityNotFoundException {
-//		userActivitiesService.updateUserActivityRating(id, rating);
-	//}
-//	
-//	//To be continued, must add extra parameters
-//	//Update an activity by status
-//	@PutMapping("/api/v1/useractivities/status/{id}")
-//	public void updateUserActivityStatus(@PathVariable("id") Integer id, @RequestBody UserActivitiesBridge u) throws ActivityNotFoundException {
-//		userActivitiesService.updateUserActivityStatus(id, u);
-//	}
-//	
-//	//Delete a to-do/tick
-//	@DeleteMapping("/api/v1/useractivities/{id}")
-//	public void deleteActivity(@PathVariable("id") Integer id) throws ActivityNotFoundException {
-//		 userActivitiesService.deleteActivity(id);
-//	}
+// 	//Delete a to-do/tick
+// 	@DeleteMapping("/api/v1/useractivities/{id}/{routeId}")
+// 	public void deleteActivity(@PathVariable("id") Integer id, @PathVariable("routeId") Integer routeId) throws ActivityNotFoundException {
+// 		 userActivitiesService.deleteActivity(id, routeId);
+// 	}
 }
