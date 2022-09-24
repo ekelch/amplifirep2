@@ -1,10 +1,9 @@
 package com.revature.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.revature.model.UserActivitiesBridge;
@@ -19,6 +18,7 @@ public class UserActivitiesService {
 	@Autowired
 	public UserActivitiesService(UserActivitiesRepository userActivitiesRepo) {
 		this.userActivitiesRepo = userActivitiesRepo;
+	
 	}
 	
 	//Add an activity
@@ -26,44 +26,38 @@ public class UserActivitiesService {
 		return userActivitiesRepo.save(ua);
 	}
 	
-	//Get list by id
-	public UserActivitiesBridge getActivityById(Integer id) throws ActivityNotFoundException {
-		Optional<UserActivitiesBridge> ua = userActivitiesRepo.findById(id);
-		
-		if(ua.isPresent()) {
-			return ua.get();
-		}else {
-			throw new ActivityNotFoundException("Activity not found");
-		}
-	}
-	
-	//Get list of user activities
-	public List<UserActivitiesBridge> getListOfActivities() {
+	//Get a list of activities by ID
+	public List<UserActivitiesBridge> getListOfActivitiesById(Integer id){
 		return userActivitiesRepo.findAll();
 	}
 	
-	//Get a list of routes by rating
-	public List<UserActivitiesBridge> getListOfActivitiesByRating(Integer rating, Sort sort) throws ActivityNotFoundException{
-		return userActivitiesRepo.findByRating(rating);
-	}
-	
-	//Update an activity by rating
-	public void updateUserActivityRating(Integer id, UserActivitiesBridge u) throws ActivityNotFoundException {
-		UserActivitiesBridge updateRating = this.getActivityById(id);
-		
-		updateRating.setRating(updateRating.getRating());
-		
-		userActivitiesRepo.save(updateRating);		
-	}
 
-	//Update an activity by status
-	public void updateUserActivityStatus(Integer id, UserActivitiesBridge u) throws ActivityNotFoundException {
-		UserActivitiesBridge updateStatus = this.getActivityById(id);
-		
-		updateStatus.setStatus(updateStatus.getStatus());
-		
-		userActivitiesRepo.save(updateStatus);
-	}
+//	public List<UserActivitiesBridge> getListOfActivitiesByIdAndRating(Integer id, Integer rating) {
+//		return userActivitiesRepo.findByIdAndRating(id, rating);
+//	}
+//	
+	
+	//Get a list of routes by rating
+ 	public List<UserActivitiesBridge> getListOfActivitiesByRating(Integer rating) throws ActivityNotFoundException{
+ 		return userActivitiesRepo.findByRating(rating, Sort.by("rating"));
+ 	}
+
+	//Update an activity by rating
+	//public void updateUserActivityRating(Integer id, Integer rating) throws ActivityNotFoundException {
+			
+	//	updateRating.setRating(updateRating.getRating());
+			
+	//	userActivitiesRepo.save(updateRating);		
+//	}
+//
+//	//Update an activity by status
+//	public void updateUserActivityStatus(Integer id, UserActivitiesBridge u) throws ActivityNotFoundException {
+//		UserActivitiesBridge updateStatus = this.getListOfActivitiesById(id);
+//		
+//		updateStatus.setStatus(updateStatus.getStatus());
+//		
+//		userActivitiesRepo.save(updateStatus);
+//	}
 	
 	//Delete a to-do/tick
 	public void deleteActivity(Integer id) {
@@ -72,6 +66,4 @@ public class UserActivitiesService {
 	}
 
 
-	
-	
 }
