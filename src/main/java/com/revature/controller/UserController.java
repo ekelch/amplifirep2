@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.model.Users;
 import com.revature.service.UserService;
 import com.revature.util.UserNotFoundException;
-@CrossOrigin("http://127.0.0.1:5500/")
+//@CrossOrigin("http://127.0.0.1:5500/")
 
 @RestController
 public class UserController {

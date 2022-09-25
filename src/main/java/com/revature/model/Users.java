@@ -26,11 +26,23 @@ public class Users {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="user_id")
 	private Integer user_id;
+	
+	@Column(name="username")
 	private String username;
+	
+	@Column(name="password")
 	private String password;
+	
+	@Column(name="email")
 	private String email;
+	
+	@Column(name="description")
 	private String description;
+	
+	@Column(name="zipcode")
 	private Integer zipcode;
+	
+	@Column(name="photo_url")
 	private String photo_url;
 	
 }

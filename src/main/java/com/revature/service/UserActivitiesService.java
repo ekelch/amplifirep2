@@ -28,49 +28,47 @@ public class UserActivitiesService {
 	}
 	
 	//Get a list of activities by ID
-	public List<UserActivitiesBridge> getListOfActivitiesById(Integer id){
+	public List<UserActivitiesBridge> getListOfActivitiesById(Integer userId){
 		return userActivitiesRepo.findAll();
 	}
 	
 	//Get a list of activities by ID and Rating
-	public List<UserActivitiesBridge> getListOfActivitiesByIdAndRating(Integer id, Integer rating) {
-		return userActivitiesRepo.findByIdAndRating(id, rating);
+	public List<UserActivitiesBridge> getListOfActivitiesByIdAndRating(Integer userId, Integer rating) {
+		return userActivitiesRepo.findByIdAndRating(userId, rating);
 	}
 	
 	//Get one activity by ID and Route ID - BUGGED - ONE more revision
-	public UserActivitiesBridge getActivityByIdAndRouteId(UserActivitiesBridge userAct) throws ActivityNotFoundException {
-		Optional<UserActivitiesBridge> userActivity = userActivitiesRepo.findByIdAndRouteId(userAct.getId(), userAct.getRoute_id());
+	public UserActivitiesBridge getActivityByIdAndRouteId(Integer id, Integer routeId) throws ActivityNotFoundException {
+		Optional<UserActivitiesBridge> userActivity = userActivitiesRepo.findByIdAndRouteId(id, routeId);
 		
 		if (userActivity.isPresent()) {
 			
 			UserActivitiesBridge userActivityActual = userActivity.get();
 			return new UserActivitiesBridge(
-					userActivityActual.getId(), 
-					userActivityActual.getRoute_id(), 
+					userActivityActual.getId(),
+					userActivityActual.getRouteId(), 
 					userActivityActual.getRating());
 		} else {
 			throw new ActivityNotFoundException("No Activity Found");
 		}
 	}
-//	
+ 	
 	//Get a list of routes by rating
  	public List<UserActivitiesBridge> getListOfActivitiesByRating(Integer rating) throws ActivityNotFoundException{
  		return userActivitiesRepo.findByRating(rating, Sort.by("rating"));
  	}
 
 	//Update an activity by User ID and Route ID
-	public void updateUserActivityRating(Integer id, Integer routeId, UserActivitiesBridge uActBridge) throws ActivityNotFoundException {
-		UserActivitiesBridge updateRating = this.getActivityByIdAndRouteId(uActBridge);
-		updateRating.setRating(updateRating.getRating());
-		userActivitiesRepo.save(updateRating);		
-	}
-	
-//	//Delete a to-do/tick
-//	public void deleteActivity(Integer id, Integer routeId) {
-//		UserActivitiesBridge oneActivity = this.getActivityByIdAndRouteId(null)
-//		userActivitiesRepo.deleteById(id);
-//		
-//	}
-
-
+	public void updateUserActivityRating(Integer userId, Integer routeId, UserActivitiesBridge uActBridge) throws ActivityNotFoundException {
+		UserActivitiesBridge updateAct = this.getActivityByIdAndRouteId(userId, routeId);
+		
+			updateAct.setRating(uActBridge.getRating());
+			userActivitiesRepo.save(updateAct);
+ 	}
+				
+ 	//Delete a to-do/tick
+ 	public void deleteActivity(Integer userId, Integer routeId) throws ActivityNotFoundException {
+ 		UserActivitiesBridge userActivity = this.getActivityByIdAndRouteId(userId, routeId);
+ 		userActivitiesRepo.delete(userActivity); 
+ 	}
 }

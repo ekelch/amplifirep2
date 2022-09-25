@@ -16,9 +16,9 @@ public interface UserActivitiesRepository extends JpaRepository<UserActivitiesBr
 	
 	List<UserActivitiesBridge> findByRating(Integer rating, Sort sort);
 
-	List<UserActivitiesBridge> findByIdAndRating(Integer id, Integer rating);
+	List<UserActivitiesBridge> findByIdAndRating(Integer userId, Integer rating);
 
 	//Bugged
-	//Optional <UserActivitiesBridge> findByIdAndRouteId(Integer id, Integer route_id);
+	Optional <UserActivitiesBridge> findByIdAndRouteId(Integer userId, Integer routeId);
 
 }
