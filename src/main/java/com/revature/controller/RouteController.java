@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.model.Routes;
 
 import com.revature.service.RouteService;
+import com.revature.util.LocationNotFoundException;
 import com.revature.util.RouteNotFoundException;
 @CrossOrigin("http://127.0.0.1:5500/")
 
@@ -43,6 +44,11 @@ public class RouteController {
 		return routeService.getRoutes();
 	}
 	
+	//Get all routes
+	@GetMapping("/api/v1/routesByLocationId/{id}")
+	public List<Routes> getRoutesByLocationId(@PathVariable("id") Integer id) throws LocationNotFoundException {
+		return routeService.getRoutesByLocationId(id);
+	}
 	
 	//Route Registration
 	@PostMapping("/api/v1/routes")
