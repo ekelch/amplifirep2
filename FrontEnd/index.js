@@ -1,5 +1,4 @@
 const urlBase = 'http://localhost:8080';
-
 window.addEventListener("load", renderHome());
 
 function renderNav() {
@@ -84,13 +83,8 @@ function derenderPage(){
 async function asyncLogin(){
     let userInput = document.querySelector("#username").value;
     let passInput = document.querySelector("#password").value;
-<<<<<<< HEAD
-
-    const url = `http://localhost:8080/api/v1/users/login;
-=======
     var data;
     const path = '/api/v1/users/login';
->>>>>>> 67562bf5b29d8704daa9224b0ed37178b91f8d30
 
     let loginObj = {
         username: userInput,
@@ -169,11 +163,13 @@ function renderHome() {
     let homediv = document.createElement("div");
 
     let homebanner = document.createElement("h1");
+    homebanner.id = "homebanner";
     homebanner.innerText = "Welcome to Mountain Project Lite";
     homediv.appendChild(homebanner);
 
     let homepic = document.createElement("img");
-    homepic.src = "https://cdn2.apstatic.com/photos/climb/119645726_medium_1601330511.jpg"; 
+    homepic.src = "https://dl.dropboxusercontent.com/s/eamnmm5u5efedfq/chrome_1NHD4eZ2qx.jpg";
+    homepic.id = "homepic";
     homediv.appendChild(homepic);
 
     document.querySelector("body").appendChild(homediv);
@@ -195,21 +191,22 @@ function renderUserHome(user){
 
 async function renderRoutes() {
     derenderPage();
-    let allRoutes = await getRoutes();
+    let allRoutes = await getAllRoutes();
 
-    console.log(allRoutes)
     let routeContainer = document.createElement("div");
     routeContainer.id = "routeContainer";
     let routeList = document.createElement("ul");
     routeList.id = "routeList";
     for (i=0; i<allRoutes.length; i++){
-        let routeItem = document.createElement("ul");
+        let routeItem = document.createElement("li");
+        let routeDesc = document.createElement("ul");
         routeItem.innerText = `Route Name: ${allRoutes[i].name}`;
         let difficulty = document.createElement("li");
         difficulty.innerText = `Difficulty: ${allRoutes[i].difficulty}`;
         let length = document.createElement("li");
         length.innerText = `Length: ${allRoutes[i].length} feet`
-        routeItem.append(difficulty, length);
+        routeDesc.append(difficulty, length);
+        routeItem.appendChild(routeDesc);
         routeList.appendChild(routeItem);
     }
     routeContainer.appendChild(routeList);
@@ -217,13 +214,49 @@ async function renderRoutes() {
 
 }
 
+async function renderRoutesByLocation(id) {
+    derenderPage();
+
+    let location = await getLocationNameById(id);
+    let locationName = location.locationName;
+    let nameHeader = document.createElement("h2");
+    nameHeader.innerText = locationName;
+
+    let locationRoutes = await getRoutesByLocation(id);
+    let routeContainer = document.createElement("div");
+    routeContainer.id = "routeContainer";
+    let routeList = document.createElement("ul");
+    routeList.id = "routeList";
+    for (i=0; i<locationRoutes.length; i++){
+        let routeItem = document.createElement("li");
+        let routeDesc = document.createElement("ul");
+        routeItem.innerText = `Route Name: ${locationRoutes[i].name}`;
+        let difficulty = document.createElement("li");
+        difficulty.innerText = `Difficulty: ${locationRoutes[i].difficulty}`;
+        let length = document.createElement("li");
+        length.innerText = `Length: ${locationRoutes[i].length} feet`
+        routeDesc.append(difficulty, length);
+        routeItem.appendChild(routeDesc);
+        routeList.appendChild(routeItem);
+    }
+    routeContainer.appendChild(routeList);
+
+    let backButton = document.createElement("input");
+    backButton.type = "button";
+    backButton.value = "Back";
+    backButton.onclick = renderLocations;
+
+    
+    document.querySelector("body").append(backButton, nameHeader, routeContainer);
+}
+
 function renderRouteInfo() {
 
 }
 
-async function renderLocations() {
+async function renderLocations() { //display list of locations
     derenderPage();
-    let locations = await getLocations();   // returns json array of all locations
+    let locations = await getLocations(); 
 
     let locationContainer = document.createElement("div");
     locationContainer.id = "locationContainer";
@@ -231,8 +264,15 @@ async function renderLocations() {
     locationList.id = "locationList";
     for (i=0; i<locations.length; i++){
         let locationItem = document.createElement("li");
+        locationItem.id = `${locations[i].id}`;
         locationItem.innerText = `${locations[i].locationName}`;
+        
+        // locationItem.addEventListener("click", function(locationId) { renderRoutesByLocation }); //redirect to specfic location user clicks on
         locationList.appendChild(locationItem);
+    }
+    locationList.onclick = function(event) {
+        let locationId = event.target.id;
+        renderRoutesByLocation(locationId);
     }
     locationContainer.appendChild(locationList);
     document.querySelector("body").appendChild(locationContainer);
@@ -240,9 +280,10 @@ async function renderLocations() {
 
 async function getLocations() {
     const path = '/api/v1/locations';
+    const url = urlBase + path;
     try {
         let response = await fetch(
-            urlBase + path,
+            url,
             {
                 method: "GET",
                 headers: new Headers({'content-type':'application/json'}),
@@ -256,11 +297,50 @@ async function getLocations() {
     }
 }
 
-async function getRoutes() {
-    const path = '/api/v1/routes';
+async function getLocationNameById(id) {
+    const path = '/api/v1/locations/';
+    const url = urlBase + path + id;
     try {
         let response = await fetch(
-            urlBase + path,
+            url,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+async function getAllRoutes() {
+    const path = '/api/v1/routes';
+    const url = urlBase + path;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+async function getRoutesByLocation(id) {
+    const path = '/api/v1/routesByLocationId/';
+    const url = urlBase + path + id;
+    try {
+        let response = await fetch(
+            url,
             {
                 method: "GET",
                 headers: new Headers({'content-type':'application/json'}),

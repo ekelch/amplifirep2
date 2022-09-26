@@ -61,3 +61,10 @@ ul.routeList li:hover{
 #userpic {
     width: 500px;
 }
+
+#homepic {
+    width: 50%;
+    margin-top: 5%;
+    margin-left: 25%;
+    margin-right: 25%;
+}
