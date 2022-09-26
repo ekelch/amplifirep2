@@ -34,18 +34,18 @@ public class UserActivitiesService {
 	
 	//Get a list of activities by ID and Rating
 	public List<UserActivitiesBridge> getListOfActivitiesByIdAndRating(Integer userId, Integer rating) {
-		return userActivitiesRepo.findByIdAndRating(userId, rating);
+		return userActivitiesRepo.findByUserIdAndRating(userId, rating);
 	}
 	
 	//Get one activity by ID and Route ID - BUGGED - ONE more revision
-	public UserActivitiesBridge getActivityByIdAndRouteId(Integer id, Integer routeId) throws ActivityNotFoundException {
-		Optional<UserActivitiesBridge> userActivity = userActivitiesRepo.findByIdAndRouteId(id, routeId);
+	public UserActivitiesBridge getActivityByUserIdAndRouteId(Integer userId, Integer routeId) throws ActivityNotFoundException {
+		Optional<UserActivitiesBridge> userActivity = userActivitiesRepo.findByUserIdAndRouteId(userId, routeId);
 		
 		if (userActivity.isPresent()) {
 			
 			UserActivitiesBridge userActivityActual = userActivity.get();
 			return new UserActivitiesBridge(
-					userActivityActual.getId(),
+					userActivityActual.getUserId(),
 					userActivityActual.getRouteId(), 
 					userActivityActual.getRating());
 		} else {
@@ -60,7 +60,7 @@ public class UserActivitiesService {
 
 	//Update an activity by User ID and Route ID
 	public void updateUserActivityRating(Integer userId, Integer routeId, UserActivitiesBridge uActBridge) throws ActivityNotFoundException {
-		UserActivitiesBridge updateAct = this.getActivityByIdAndRouteId(userId, routeId);
+		UserActivitiesBridge updateAct = this.getActivityByUserIdAndRouteId(userId, routeId);
 		
 			updateAct.setRating(uActBridge.getRating());
 			userActivitiesRepo.save(updateAct);
@@ -68,7 +68,7 @@ public class UserActivitiesService {
 				
  	//Delete a to-do/tick
  	public void deleteActivity(Integer userId, Integer routeId) throws ActivityNotFoundException {
- 		UserActivitiesBridge userActivity = this.getActivityByIdAndRouteId(userId, routeId);
+ 		UserActivitiesBridge userActivity = this.getActivityByUserIdAndRouteId(userId, routeId);
  		userActivitiesRepo.delete(userActivity); 
  	}
 }

@@ -23,9 +23,9 @@ import lombok.NoArgsConstructor;
 public class UserActivitiesBridge {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="user_id")
-	private Integer id;
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="userid")
+	private Integer userId;
 	
 	//@OneToMany(cascade = CascadeType.ALL)
 	@Column(name="routeid")
