@@ -13,16 +13,14 @@ function renderNav() {
     let navUsers = document.createElement("LI");
         navUsers.innerText = "Users";
         navUsers.addEventListener("click", renderLogin);
-    let navRoutes = document.createElement("LI");
-        navRoutes.innerText = "Routes";
-        navRoutes.addEventListener("click", renderRoutes);
     let navLocations = document.createElement("LI");
         navLocations.innerText = "Locations";
         navLocations.addEventListener("click", renderLocations);
     let navSearch = document.createElement("LI");
         navSearch.innerText = "Search";
+        navSearch.addEventListener("click", renderSearchHome);
 
-    navList.append(navHome, navUsers, navRoutes, navLocations, navSearch);
+    navList.append(navHome, navUsers, navLocations, navSearch);
 
     navigation.appendChild(navList);
     document.querySelector("body").appendChild(navigation);
@@ -106,55 +104,6 @@ async function asyncLogin(){
     }
     renderUserHome(user);
 }
-  
- 
-  var down = document.getElementById("login_DOWN");
-  var br = document.createElement("br");
-
-function login_form() {
-               
-    // Create a form dynamically
-    var form = document.createElement("form");
-    form.setAttribute("method", "post");
-    form.setAttribute("action", "#");
- 
-    // Create an input element for username
-    var UN = document.createElement("input");
-    UN.setAttribute("type", "text");
-    UN.setAttribute("name", "username");
-    UN.setAttribute("placeholder", "User Name");
-
-
-
-    // Create an input element for password
-    var PWD = document.createElement("input");
-    PWD.setAttribute("type", "password");
-    PWD.setAttribute("name", "password");
-    PWD.setAttribute("placeholder", "Password");
-
-
-    // create a submit button
-    var s = document.createElement("input");
-    s.setAttribute("type", "submit");
-    s.setAttribute("value", "Submit");
-        
-    // Append the full name input to the form
-    form.appendChild(UN);
-        
-    // Inserting a line break
-    form.appendChild(br.cloneNode());
-        
-    // Append the Password to the form
-    form.appendChild(PWD);
-    form.appendChild(br.cloneNode());
-        
-
-    // Append the submit button to the form
-    form.appendChild(s);
-
-    document.getElementsByTagName("body")[0]
-    .appendChild(form);
-}
 
 function renderHome() {
     derenderPage();
@@ -187,31 +136,6 @@ function renderUserHome(user){
     document.querySelector("body").appendChild(userinfoDiv);
 }
 
-async function renderRoutes() {
-    derenderPage();
-    let allRoutes = await getAllRoutes();
-
-    let routeContainer = document.createElement("div");
-    routeContainer.id = "routeContainer";
-    let routeList = document.createElement("ul");
-    routeList.id = "routeList";
-    for (i=0; i<allRoutes.length; i++){
-        let routeItem = document.createElement("li");
-        let routeDesc = document.createElement("ul");
-        routeItem.innerText = `Route Name: ${allRoutes[i].name}`;
-        let difficulty = document.createElement("li");
-        difficulty.innerText = `Difficulty: ${allRoutes[i].difficulty}`;
-        let length = document.createElement("li");
-        length.innerText = `Length: ${allRoutes[i].length} feet`
-        routeDesc.append(difficulty, length);
-        routeItem.appendChild(routeDesc);
-        routeList.appendChild(routeItem);
-    }
-    routeContainer.appendChild(routeList);
-    document.querySelector("body").appendChild(routeContainer);
-
-}
-
 async function renderRoutesByLocation(location) {
     derenderPage();
     renderWeather(location.latlong);
@@ -219,58 +143,155 @@ async function renderRoutesByLocation(location) {
     nameHeader.innerText = location.locationName;
 
     let locationRoutes = await getRoutesByLocation(location.id);
-    let routeContainer = document.createElement("div");
-    routeContainer.id = "routeContainer";
-    let routeList = document.createElement("ul");
-    routeList.id = "routeList";
+    let routeTable = document.createElement("table");
+    routeTable.id = "routeTable";
+    let routeHeader = document.createElement("tr");
+    let thName = document.createElement("th");
+    thName.innerText = "Route Name";
+    let thDifficulty = document.createElement("th");
+    thDifficulty.innerText = "Difficulty";
+    let thLength = document.createElement("th");
+    thLength.innerText = "Length (feet)";
+    routeHeader.append(thName, thDifficulty, thLength);
+
     for (i=0; i<locationRoutes.length; i++){
-        let routeItem = document.createElement("li");
-        let routeDesc = document.createElement("ul");
-        routeItem.innerText = `Route Name: ${locationRoutes[i].name}`;
-        let difficulty = document.createElement("li");
-        difficulty.innerText = `Difficulty: ${locationRoutes[i].difficulty}`;
-        let length = document.createElement("li");
-        length.innerText = `Length: ${locationRoutes[i].length} feet`
-        routeDesc.append(difficulty, length);
-        routeItem.appendChild(routeDesc);
-        routeList.appendChild(routeItem);
+        let routeItem = document.createElement("tr");
+        let tdName = document.createElement("tr");
+        tdName.innerText = locationRoutes[i].name;
+        tdName.id = locationRoutes[i].route_id;
+        let tdDifficulty = document.createElement("tr");
+        tdDifficulty.innerText = locationRoutes[i].difficulty;
+        let tdLength = document.createElement("tr");
+        tdLength.innerText = locationRoutes[i].length;
+        routeItem.append(tdName, tdDifficulty, tdLength);
+        routeTable.append(routeItem);
     }
-    routeContainer.appendChild(routeList);
+
+    routeTable.onclick = async function(event) {
+        routeId = event.target.id;
+        let route = await getRouteById(routeId);
+        renderRoute(route);
+
+        // let backButton = document.createElement("input");
+        // backButton.type = "button";
+        // backButton.value = "Back";
+        // backButton.onclick = await renderRoutesByLocation(route.location_id);
+        // document.querySelector("body").append(backButton);  
+    }
 
     let backButton = document.createElement("input");
     backButton.type = "button";
     backButton.value = "Back";
     backButton.onclick = renderLocations;
-
-    
-    document.querySelector("body").append(backButton, nameHeader, routeContainer);
+    document.querySelector("body").append(backButton, nameHeader, routeTable);
 }
 
-function renderRouteInfo() {
+function renderSearchHome() {
+    derenderPage();
+    let searchHeader = document.createElement("h2");
+    searchHeader.innerText = "Search Routes By:"
+    document.querySelector("body").append(searchHeader);
+    let searchDiv = document.createElement("div");
+    let searchTypes = ['Name', 'Rating', 'Difficulty', 'Location'];
+    let listeners = [searchByName, searchByRating, searchByDifficulty, searchByLocation];
+    for (let i = 0; i < searchTypes.length; i++){
+        let itemDiv = document.createElement("div");
+            let nameInput = document.createElement("input");
+                nameInput.type = "text";
+                nameInput.id = `${searchTypes[i]}Search`;
+                nameInput.placeholder = `Search by ${searchTypes[i]}`;
+            let searchBtn = document.createElement("button");
+                searchBtn.innerText = "Submit";
+                searchBtn.addEventListener("click", listeners[i]);
+        itemDiv.append(nameInput, searchBtn);
+        searchDiv.appendChild(itemDiv);
+    }
+    document.querySelector("body").append(searchDiv);
+}
 
+const searchByName = async function() {
+    let compressRoutes = await getAllRoutesCompress();
+    let nameInput = document.querySelector("#NameSearch").value;
+    let inputCompress = nameInput.replaceAll(/[^a-zA-Z0-9]/g, "").toLowerCase();
+    for (let route of compressRoutes) {
+        if (route.name == inputCompress){
+            let actualRoute = await getRouteById(route.route_id)
+            await renderRoute(actualRoute);
+        }
+    }
+}
+
+const searchByRating = async function() {
+    console.log('5');
+}
+
+const searchByDifficulty = async function() {
+    console.log('5');
+}
+
+const searchByLocation = async function() {
+    console.log('5');
+}
+
+const renderRoute = async function(route) {
+    derenderPage();
+    console.log(route);
+    let routeDiv = document.createElement("div");
+        let routeHeader = document.createElement("h2");
+        routeHeader.innerText = `${route.name}`;
+        let routeDifficulty = document.createElement("p");
+        routeDifficulty.innerText = `YDS Rating: 5.${route.difficulty}`;
+        let routeLength = document.createElement("p");
+        routeLength.innerText = `Length: ${route.length} feet`;
+
+    routeDiv.append(routeHeader, routeDifficulty);
+    
+    let locationDiv = document.createElement("div");
+        let locationName = document.createElement("h2");
+        locationName.innerText = `Location: ${route.location_id.locationName}`;
+        let latlong = document.createElement("p");
+        latlong.innerText = `Latitude/Longitude: ${route.location_id.latlong}`;
+
+    locationDiv.append(locationName, latlong);
+        
+    document.querySelector("body").append(routeDiv, locationDiv);
+    renderWeather(route.location_id.latlong);
 }
 
 async function renderLocations() { //display list of locations
     derenderPage();
     let locations = await getLocations(); 
-    let locationContainer = document.createElement("div");
-    locationContainer.id = "locationContainer";
-    let locationList = document.createElement("ul");
-    locationList.id = "locationList";
+    let locationTable = document.createElement("table");
+    locationTable.id = "locationTable";
+    let locationHead = document.createElement("tr");
+    let thName = document.createElement("th");
+    thName.innerText = "Location Name";
+    let thCoords = document.createElement("th");
+    thCoords.innerText = "Coordinates";
+    locationHead.append(thName, thCoords);
+    locationTable.appendChild(locationHead);
+
+    locationTable.id = "locationList";
+
     for (i=0; i<locations.length; i++){
-        let locationItem = document.createElement("li");
-        locationItem.id = `${locations[i].id}`;
-        locationItem.innerText = `${locations[i].locationName}`;
-        locationList.appendChild(locationItem);
+        let locationItem = document.createElement("tr");
+        let locationName = document.createElement("td");
+        locationName.id = `${locations[i].id}`;
+        locationName.innerText = `${locations[i].locationName}`;
+        let locationCoords = document.createElement("td");
+        locationCoords.id = `${locations[i].id}`;
+        locationCoords.innerText = `${locations[i].latlong}`;
+        locationItem.append(locationName, locationCoords);
+        locationTable.appendChild(locationItem);
     }
-    locationList.onclick = async function(event) {
+    locationTable.onclick = async function(event) {
+        console.log(event.target);
         let locationId = event.target.id;
         let location = await getLocationById(locationId);
         renderRoutesByLocation(location);
     }
-    locationContainer.appendChild(locationList);
     
-    document.querySelector("body").appendChild(locationContainer);
+    document.querySelector("body").appendChild(locationTable);
 }
 
 async function renderWeather(latlong) {
@@ -360,6 +381,44 @@ async function getAllRoutes() {
     }
 }
 
+const getRouteById = async function(id) {
+    const path = '/api/v1/routes/';
+    const url = urlBase + path + id;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+async function getAllRoutesCompress() {
+    const path = '/api/v1/routescompress';
+    const url = urlBase + path;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
 async function getRoutesByLocation(id) {
     const path = '/api/v1/routesByLocationId/';
     const url = urlBase + path + id;
@@ -379,7 +438,7 @@ async function getRoutesByLocation(id) {
     }
 }
 
-const getCurrentWeather = async function getWeatherByLocation(latlong) {
+const getCurrentWeather = async function(latlong) {
     const weatherApiUrl = 'http://api.weatherapi.com/v1/current.json?key=d4add7b7a6f24255aa8202015221509&q='; // documentation: https://www.weatherapi.com/api-explorer.aspx
     const url = weatherApiUrl + latlong;
     try {
