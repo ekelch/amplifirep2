@@ -2,6 +2,7 @@ package com.revature.controller;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.model.Users;
 import com.revature.service.UserService;
-import com.revature.util.Authentification;
+
 import com.revature.util.UserNotFoundException;
 @CrossOrigin("http://127.0.0.1:5500/")
 
