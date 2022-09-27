@@ -27,5 +27,6 @@ public class Locations {
 	@Column(name="location_id")
 	private Integer id;
 	private String locationName;
+	private String latlong;
 
 }

@@ -83,7 +83,6 @@ function derenderPage(){
 async function asyncLogin(){
     let userInput = document.querySelector("#username").value;
     let passInput = document.querySelector("#password").value;
-    var data;
     const path = '/api/v1/users/login';
 
     let loginObj = {
@@ -110,7 +109,6 @@ async function asyncLogin(){
   
  
   var down = document.getElementById("login_DOWN");
-  // Create a break line element
   var br = document.createElement("br");
 
 function login_form() {
@@ -214,15 +212,13 @@ async function renderRoutes() {
 
 }
 
-async function renderRoutesByLocation(id) {
+async function renderRoutesByLocation(location) {
     derenderPage();
-
-    let location = await getLocationNameById(id);
-    let locationName = location.locationName;
+    renderWeather(location.latlong);
     let nameHeader = document.createElement("h2");
-    nameHeader.innerText = locationName;
+    nameHeader.innerText = location.locationName;
 
-    let locationRoutes = await getRoutesByLocation(id);
+    let locationRoutes = await getRoutesByLocation(location.id);
     let routeContainer = document.createElement("div");
     routeContainer.id = "routeContainer";
     let routeList = document.createElement("ul");
@@ -257,7 +253,6 @@ function renderRouteInfo() {
 async function renderLocations() { //display list of locations
     derenderPage();
     let locations = await getLocations(); 
-
     let locationContainer = document.createElement("div");
     locationContainer.id = "locationContainer";
     let locationList = document.createElement("ul");
@@ -266,16 +261,46 @@ async function renderLocations() { //display list of locations
         let locationItem = document.createElement("li");
         locationItem.id = `${locations[i].id}`;
         locationItem.innerText = `${locations[i].locationName}`;
-        
-        // locationItem.addEventListener("click", function(locationId) { renderRoutesByLocation }); //redirect to specfic location user clicks on
         locationList.appendChild(locationItem);
     }
-    locationList.onclick = function(event) {
+    locationList.onclick = async function(event) {
         let locationId = event.target.id;
-        renderRoutesByLocation(locationId);
+        let location = await getLocationById(locationId);
+        renderRoutesByLocation(location);
     }
     locationContainer.appendChild(locationList);
+    
     document.querySelector("body").appendChild(locationContainer);
+}
+
+async function renderWeather(latlong) {
+    let weather = await getCurrentWeather(latlong);
+    console.log(weather);
+
+    let weatherDiv = document.createElement("div");
+
+    let locationInfo = document.createElement("h3");
+    locationInfo.innerText = `Weather in ${weather.location.name}, ${weather.location.region}`;
+    weatherDiv.appendChild(locationInfo);
+
+    let conditionInfo = document.createElement("p");
+    conditionInfo.innerText = `Weather Conditions: ${weather.current.condition.text}`;
+    weatherDiv.appendChild(conditionInfo);
+
+    let conditionImg = document.createElement("img");
+    conditionImg.src = weather.current.condition.icon;
+    weatherDiv.appendChild(conditionImg);
+
+    let tempC = document.createElement("p");
+    tempC.innerText = `Current Temperature (degrees Celsius): ${weather.current.temp_c}`;
+    weatherDiv.appendChild(tempC);
+
+    let humidity = document.createElement("p");
+    humidity.innerText = `Current Relative Humidity: ${weather.current.humidity}%`;
+    weatherDiv.appendChild(humidity);
+
+
+    document.querySelector("body").append(weatherDiv);
 }
 
 async function getLocations() {
@@ -297,7 +322,7 @@ async function getLocations() {
     }
 }
 
-async function getLocationNameById(id) {
+async function getLocationById(id) {
     const path = '/api/v1/locations/';
     const url = urlBase + path + id;
     try {
@@ -338,6 +363,25 @@ async function getAllRoutes() {
 async function getRoutesByLocation(id) {
     const path = '/api/v1/routesByLocationId/';
     const url = urlBase + path + id;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+const getCurrentWeather = async function getWeatherByLocation(latlong) {
+    const weatherApiUrl = 'http://api.weatherapi.com/v1/current.json?key=d4add7b7a6f24255aa8202015221509&q='; // documentation: https://www.weatherapi.com/api-explorer.aspx
+    const url = weatherApiUrl + latlong;
     try {
         let response = await fetch(
             url,
