@@ -8,16 +8,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonIgnoreProperties(ignoreUnknown = true)
+@Data
 @Entity
 @Table(name="users")
 public class Users {
@@ -44,5 +41,7 @@ public class Users {
 	
 	@Column(name="photo_url")
 	private String photo_url;
+
+	
 	
 }
