@@ -37,7 +37,7 @@ class DemoApplicationTests {
 	 * (new Users(1, "user1", "pass1", "user1@email.com", "user testing", 99988),
 	 * new Users(2, "user2", "pass2", "user2@email.com", "user testing", 99987)
 	 * ).Collectors.toList())); assertEquals(2, service.getUsers().size()); }
-	 */
+	 
 
 	@Test
 	public void registerTest() {
@@ -45,5 +45,5 @@ class DemoApplicationTests {
 		when(repository.save(user)).thenReturn(user);
 		assertEquals(user, service.register(user));
 	}
-
+*/
 }

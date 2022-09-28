@@ -1,5 +1,6 @@
 package com.revature.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import java.util.Optional;
@@ -33,6 +34,23 @@ public class RouteService {
 		}else {
 			throw new RouteNotFoundException("Route not found");
 		}
+	}
+	
+	public List<Routes> getRoutesByLocationId(Integer locationId) {
+		List<Routes> routes = routeRepository.findAll();
+		List<Routes> locationRoutes = new ArrayList<Routes>(); // I do not know what type of list this should be.. -Evan
+		for (Routes route:routes) {
+			if (route.getLocation_id().getId().equals(locationId))
+				locationRoutes.add(route);
+		}
+		return locationRoutes;
+	}
+	
+	public List <Routes> getRoutesCompressed(){
+		List<Routes> routes = routeRepository.findAll();
+		for (Routes route:routes)
+			route.setName(route.getName().replaceAll("[^a-zA-Z0-9]", "").toLowerCase());
+		return routes;
 	}
 	
 	public List <Routes> getRoutes(){

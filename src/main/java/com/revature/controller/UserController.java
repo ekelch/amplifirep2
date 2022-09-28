@@ -3,8 +3,9 @@ package com.revature.controller;
 import java.util.List;
 
 
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,11 +13,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.model.Users;
 import com.revature.service.UserService;
+
 import com.revature.util.UserNotFoundException;
 @CrossOrigin("http://127.0.0.1:5500/")
 
@@ -48,6 +49,11 @@ public class UserController {
 	@PostMapping("/api/v1/users/login")
 	public Users login(@RequestBody Users user) throws UserNotFoundException {
 		return userService.login(user);
+//		Users userOut = userService.login(user);
+//		HttpHeaders responseHeaders = new HttpHeaders();
+//		String access_token = Authentification.getToken(userOut);
+//		responseHeaders.set("access_token", access_token);
+//		return new ResponseEntity<Users>(userOut);
 		
 	}
 	
