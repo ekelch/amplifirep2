@@ -71,6 +71,7 @@ public class UserService {
 		updateUser.setPassword(user.getPassword());
 		updateUser.setDescription(user.getDescription());
 		updateUser.setZipcode(user.getZipcode());
+		updateUser.setPhoto_url(user.getPhoto_url());
 		
 		userRepository.save(updateUser);
 	}

@@ -4,7 +4,10 @@ window.addEventListener("load", renderHome());
 function renderNav() {
 
     let navigation = document.createElement("nav");
-    navigation.className = "navbar";
+    navigation.classList.add("d-flex", "justify-content-center","flex-nowrap");
+    navigation.classList.add("shadow", "p-3", "mb-5","bg-secondary", "rounded");
+
+    //navigation.className = "navbar";
     let navList = document.createElement("ul");
     navList.className = "dawnnav";
     let navHome = document.createElement("LI");
@@ -24,6 +27,8 @@ function renderNav() {
 
     navigation.appendChild(navList);
     document.querySelector("body").appendChild(navigation);
+    document.body.classList.add("bg-light");
+
 }
 
 function renderLogin(){
@@ -31,6 +36,8 @@ function renderLogin(){
     let loginContainer = document.createElement("div");
     loginContainer.id = "login";
     loginContainer.className = "bannerLogin";
+    loginContainer.classList.add("form-group","text-center","justify-content-center");
+    loginContainer.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
             
     let usernameLabel = document.createElement("p");        // create username static label "Username"
     usernameLabel.innerText = "Username";
@@ -41,6 +48,7 @@ function renderLogin(){
     usernameInput.type = "text";
     usernameInput.placeholder = "username";
     loginContainer.appendChild(usernameInput);
+    usernameInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
     loginContainer.appendChild(document.createElement("br"));
 
     let passwordLabel = document.createElement("p");        // create password static label "Password"
@@ -52,17 +60,21 @@ function renderLogin(){
     passwordInput.id = "password";
     passwordInput.placeholder = "password";
     loginContainer.appendChild(passwordInput);
+    passwordInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
+    loginContainer.appendChild(document.createElement("br"));
     loginContainer.appendChild(document.createElement("br"));
 
     let submitButton = document.createElement("input");     // create submit button, goes to asyncLogin
     submitButton.type = "button";
     submitButton.value = "submit";
     submitButton.addEventListener("click", asyncLogin);
+    submitButton.classList.add("btn", "btn-primary","m-3");
     loginContainer.appendChild(submitButton);
 
     let resetButton = document.createElement("input");      // create reset button to clear input strings
     resetButton.type = "button";
     resetButton.value = "reset";
+    resetButton.classList.add("btn", "btn-primary");
     resetButton.addEventListener("click", function(){
         usernameInput.value = "";
         passwordInput.value = "";
@@ -87,7 +99,6 @@ async function asyncLogin(){
         username: userInput,
         password: passInput
     };
-
     try{
         let response = await fetch(
             urlBase + path,
@@ -113,13 +124,148 @@ function renderHome() {
     homebanner.id = "homebanner";
     homebanner.innerText = "Welcome to Mountain Project Lite";
     homediv.appendChild(homebanner);
-
+    homebanner.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
+   // homebanner.classList.add("text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;");
     let homepic = document.createElement("img");
     homepic.src = "https://dl.dropboxusercontent.com/s/eamnmm5u5efedfq/chrome_1NHD4eZ2qx.jpg";
     homepic.id = "homepic";
     homediv.appendChild(homepic);
+    homepic.classList.add("shadow","shadow-info", "p-3", "mb-5", "rounded-circle")
 
     document.querySelector("body").appendChild(homediv);
+}
+
+async function getUserById(id) {
+    const path = '/api/v1/users/';
+    const url = urlBase + path + id;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+async function updateUser(user){
+    const path = '/api/v1/users/';
+    const url = urlBase + path + user.user_id;
+
+    let updatedUser = {
+        userId : user.user_id,
+        username: user.username,
+        password: user.password,
+        description: user.description,
+        email: user.email,
+        photo_url: user.photo_url,
+        zipcode: user.zipcode
+    };
+    console.log(updatedUser);
+    try{
+        await fetch(
+            url,
+            {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedUser)}
+        )
+    }catch(error){
+        console.error(`Error is ${error}`);
+    }
+}
+
+function renderUserUpdate(user) {
+    derenderPage();
+    let updateDiv = document.createElement("div");
+    let updateBanner = document.createElement("h2");
+    updateBanner.innerText = 'Hello, what information would you like to update?';
+    let updateWarning = document.createElement("h3");
+    updateWarning.innerText = 'You cannot edit your username or email.';
+    let updateOptionList = document.createElement("ul");
+    let userPass = document.createElement("li");
+    userPass.innerText = 'Password';
+    let userPic = document.createElement("li");
+    userPic.innerText = 'User Photo URL';
+    let userDescription = document.createElement("li");
+    userDescription.innerText = 'User Description';
+    let userZip = document.createElement("li");
+    userZip.innerText = 'Zipcode';
+    updateOptionList.append(userPass, userPic, userDescription, userZip);
+    updateDiv.appendChild(updateOptionList);
+    
+    updateOptionList.onclick = async function(event) {
+        if (event.target.innerText == 'Password') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Update your Password:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New Password';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {user['password'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateUser(user)})
+            updateBtn.addEventListener("click", function() {renderUserHome(user)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+
+        if (event.target.innerText == 'User Photo URL') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Enter your new photo URL:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New URL';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {user['photo_url'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateUser(user)})
+            updateBtn.addEventListener("click", function() {renderUserHome(user)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+
+        if (event.target.innerText == 'Zipcode') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Enter your new Zipcode:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New Zipcode';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {user['zipcode'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateUser(user)})
+            updateBtn.addEventListener("click", function() {renderUserHome(user)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+
+        if (event.target.innerText == 'User Description') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Enter your user description:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New bio';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {user['description'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateUser(user)})
+            updateBtn.addEventListener("click", function() {renderUserHome(user)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+    }
+    document.querySelector("body").appendChild(updateDiv);
+
 }
 
 function renderUserHome(user){
@@ -130,9 +276,19 @@ function renderUserHome(user){
     let userpic = document.createElement("img");
     userpic.id = "userpic";
     userpic.src = user.photo_url;
-    console.log(user);
+    let userDescription = document.createElement("p");
+    userDescription.innerText = 'Bio: ' + user.description;
+    let userZip = document.createElement("p");
+    userZip.innerText = 'Zipcode: ' + user.zipcode;
+    let userEmail = document.createElement("p");
+    userEmail.innerText = 'Email: ' + user.email;
 
-    userinfoDiv.append(userbanner, userpic);
+    let updateBtn = document.createElement("input");
+    updateBtn.type = "Button";
+    updateBtn.value = "Update User";
+    updateBtn.addEventListener("click", function() {renderUserUpdate(user)});
+
+    userinfoDiv.append(userbanner, userpic, userDescription, userEmail, userZip, updateBtn);
     document.querySelector("body").appendChild(userinfoDiv);
 }
 
@@ -141,10 +297,13 @@ async function renderRoutesByLocation(location) {
     renderWeather(location.latlong);
     let nameHeader = document.createElement("h2");
     nameHeader.innerText = location.locationName;
+    nameHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
 
     let locationRoutes = await getRoutesByLocation(location.id);
     let routeTable = document.createElement("table");
     routeTable.id = "routeTable";
+    routeTable.classList.add("table", "table-striped");
+    routeTable.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
     let routeHeader = document.createElement("tr");
     let thName = document.createElement("th");
     thName.innerText = "Route Name";
@@ -181,7 +340,8 @@ async function renderRoutesByLocation(location) {
 
     let backButton = document.createElement("input");
     backButton.type = "button";
-    backButton.value = "Back";
+    backButton.value = "Back ->";
+    backButton.classList.add("btn", "btn-info","text-center","justify-content-center");
     backButton.onclick = renderLocations;
     document.querySelector("body").append(backButton, nameHeader, routeTable);
 }
@@ -190,21 +350,27 @@ function renderSearchHome() {
     derenderPage();
     let searchHeader = document.createElement("h2");
     searchHeader.innerText = "Search Routes By:"
+    searchHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
     document.querySelector("body").append(searchHeader);
     let searchDiv = document.createElement("div");
     let searchTypes = ['Name', 'Rating', 'Difficulty', 'Location'];
     let listeners = [searchByName, searchByRating, searchByDifficulty, searchByLocation];
     for (let i = 0; i < searchTypes.length; i++){
         let itemDiv = document.createElement("div");
+        itemDiv.classList.add("row","align-items-center");
             let nameInput = document.createElement("input");
                 nameInput.type = "text";
+                nameInput.classList.add("form-control","col-4","w-25","mx-auto");
                 nameInput.id = `${searchTypes[i]}Search`;
                 nameInput.placeholder = `Search by ${searchTypes[i]}`;
             let searchBtn = document.createElement("button");
                 searchBtn.innerText = "Submit";
+                searchBtn.classList.add("btn", "btn-primary","col-3");
                 searchBtn.addEventListener("click", listeners[i]);
         itemDiv.append(nameInput, searchBtn);
         searchDiv.appendChild(itemDiv);
+        searchDiv.appendChild(document.createElement("br"));
+        searchDiv.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
     }
     document.querySelector("body").append(searchDiv);
 }
@@ -262,6 +428,8 @@ async function renderLocations() { //display list of locations
     derenderPage();
     let locations = await getLocations(); 
     let locationTable = document.createElement("table");
+    locationTable.classList.add("table", "table-striped");
+    locationTable.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
     locationTable.id = "locationTable";
     let locationHead = document.createElement("tr");
     let thName = document.createElement("th");
@@ -269,6 +437,7 @@ async function renderLocations() { //display list of locations
     let thCoords = document.createElement("th");
     thCoords.innerText = "Coordinates";
     locationHead.append(thName, thCoords);
+    locationHead.classList.add("bg-warning");
     locationTable.appendChild(locationHead);
 
     locationTable.id = "locationList";
@@ -299,6 +468,8 @@ async function renderWeather(latlong) {
     console.log(weather);
 
     let weatherDiv = document.createElement("div");
+    weatherDiv.classList.add("form-group","text-center","justify-content-center");
+    weatherDiv.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
 
     let locationInfo = document.createElement("h3");
     locationInfo.innerText = `Weather in ${weather.location.name}, ${weather.location.region}`;
