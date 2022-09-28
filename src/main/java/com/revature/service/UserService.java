@@ -49,10 +49,6 @@ public class UserService {
 					actualUser.getDescription(),
 					actualUser.getZipcode(),
 					actualUser.getPhoto_url());
-<<<<<<< HEAD
-					
-=======
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
 		} else {
 			throw new UserNotFoundException("User Not Found");
 		}
