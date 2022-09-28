@@ -30,8 +30,7 @@ public class TickTable {
 	
 	@Column(name="rating")
 	private Integer rating;
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
+
+

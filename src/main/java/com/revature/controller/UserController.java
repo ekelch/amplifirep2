@@ -42,7 +42,7 @@ public class UserController {
 	//Get a list of users (for admin use)
 	@GetMapping("/api/v1/users")
 	public List<Users> getUsers(){
-		return userService.getUsers();
+		return userService.getAllUsers();
 	}
 	
 	//User login authentication
