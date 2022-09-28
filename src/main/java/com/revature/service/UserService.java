@@ -39,16 +39,16 @@ public class UserService {
 	public Users login(Users user) throws UserNotFoundException {
 		Optional<Users> existUser = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
 		if(existUser.isPresent()) {
-			
-			Users actualUser = existUser.get();
-			return new Users(
-					actualUser.getUser_id(), 
-					actualUser.getUsername(), 
-					actualUser.getPassword(), 
-					actualUser.getEmail(), 
-					actualUser.getDescription(),
-					actualUser.getZipcode(),
-					actualUser.getPhoto_url());
+			return existUser.get();
+//			Users actualUser = existUser.get();
+//			return new Users(
+//					actualUser.getUser_id(), 
+//					actualUser.getUsername(), 
+//					actualUser.getPassword(), 
+//					actualUser.getEmail(), 
+//					actualUser.getDescription(),
+//					actualUser.getZipcode(),
+//					actualUser.getPhoto_url());
 		} else {
 			throw new UserNotFoundException("User Not Found");
 		}

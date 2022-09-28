@@ -294,7 +294,6 @@ function renderUserHome(user){
 
 async function renderRoutesByLocation(location) {
     derenderPage();
-    renderWeather(location.latlong);
     let nameHeader = document.createElement("h2");
     nameHeader.innerText = location.locationName;
     nameHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
@@ -338,7 +337,15 @@ async function renderRoutesByLocation(location) {
     backButton.value = "Back ->";
     backButton.classList.add("btn", "btn-info","text-center","justify-content-center");
     backButton.onclick = renderLocations;
-    document.querySelector("body").append(backButton, nameHeader, routeTable);
+
+    let newRouteButton = document.createElement("input");
+    newRouteButton.type = "button";
+    newRouteButton.value = "Add a new route to this location";
+    newRouteButton.classList.add("btn", "btn-info","text-center","justify-content-center");
+    newRouteButton.onclick = function() {renderAddRoute(location)};
+
+    document.querySelector("body").append(backButton, nameHeader, routeTable, newRouteButton);
+    renderWeather(location.latlong);
 }
 
 function renderSearchHome() {
@@ -384,6 +391,55 @@ const searchByName = async function() {
             await renderRoute(actualRoute);
         }
     }
+}
+let bad = false;
+const renderAddRoute = function(location) {
+    derenderPage();
+    let locationHeader = document.createElement("h2");
+    locationHeader.innerText = `Submit a new route to ${location.locationName}`;
+    let tryAgain = document.createElement('h3');
+    tryAgain.innerText = "Please enter all required fields and submit again.";
+    if (bad){
+        document.querySelector("body").append(tryAgain);
+    }
+    let newRoute;
+    let newRouteDiv = document.createElement("div");
+    let newRouteName = document.createElement("input");
+    newRouteName.placeholder = "Route Name";
+    let newRouteDifficulty = document.createElement("input");
+    newRouteDifficulty.placeholder = "Difficulty";
+    let newRouteLength = document.createElement("input");
+    newRouteLength.placeholder = "Length (feet)";
+    let newRoutePhotoUrl = document.createElement("input");
+    newRoutePhotoUrl.placeholder = "Photo URL (Optional)";
+    let submitButton = document.createElement("input");
+    submitButton.type = "Button";
+    submitButton.value = "Submit New Route";
+
+    newRouteDiv.append(locationHeader, newRouteName, newRouteDifficulty, newRouteLength, newRoutePhotoUrl, submitButton);
+    document.querySelector("body").append(newRouteDiv);
+
+    submitButton.onclick = function() {
+        if (newRouteName.value != '' & newRouteDifficulty.value != '' & newRouteLength.value != '') { 
+            newRoute = {
+                name: newRouteName.value,
+                location_id: location,
+                difficulty: newRouteDifficulty.value,
+                length: newRouteLength.value
+            }
+            if (newRoutePhotoUrl.value != ''){
+                newRoute.photo_url = newRoutePhotoUrl.value;
+            }
+        let updatedRoute = postRoute(newRoute);
+        console.log(updatedRoute);
+        } else {
+            bad = true;
+            renderAddRoute(location);
+        }
+        console.log(newRoute);
+    };
+
+    
 }
 
 const searchByRating = async function() {
@@ -618,6 +674,25 @@ const getRouteById = async function(id) {
     }
 }
 
+const postRoute = async function(route){
+    const path = '/api/v1/routes';
+    const url = urlBase + path;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "POST",
+                headers: new Headers({'content-type':'application/json'}),
+                body: JSON.stringify(route)
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
 async function getRoutesByLocation(id) {
     const path = '/api/v1/routesByLocationId/';
     const url = urlBase + path + id;
@@ -630,6 +705,7 @@ async function getRoutesByLocation(id) {
                 body: null
             })
             let data = await response.json();
+            console.log(data);
             return data;
 
     } catch (error) {

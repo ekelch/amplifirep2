@@ -22,7 +22,6 @@ public class RouteService {
 	
 	@Autowired
 	public RouteService(RouteRepository routeRepository) {
-		super();
 		this.routeRepository = routeRepository;
 	}
 	
@@ -38,11 +37,12 @@ public class RouteService {
 	
 	public List<Routes> getRoutesByLocationId(Integer locationId) {
 		List<Routes> routes = routeRepository.findAll();
-		List<Routes> locationRoutes = new ArrayList<Routes>(); // I do not know what type of list this should be.. -Evan
+		List<Routes> locationRoutes = new ArrayList<Routes>(); 
 		for (Routes route:routes) {
 			if (route.getLocation_id().getId().equals(locationId))
 				locationRoutes.add(route);
 		}
+		System.out.println(locationRoutes);
 		return locationRoutes;
 	}
 	
@@ -50,8 +50,14 @@ public class RouteService {
 		return routeRepository.findAll();
 	}
 
-	public Routes register(Routes route) {
-		return routeRepository.saveAndFlush(route);
+	public Routes register(Routes route) throws RouteNotFoundException {
+		Optional<Routes> existingRoute = routeRepository.findByName(route.getName());
+		if (existingRoute.isEmpty()) {
+			Routes newRoute = routeRepository.saveAndFlush(route);
+			return newRoute;
+		} else {
+			throw new RouteNotFoundException("Duplicate route entry");
+		}
 	}
 	
 	public void deleteRoute(Integer id) throws RouteNotFoundException {
