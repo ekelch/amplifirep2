@@ -4,7 +4,10 @@ window.addEventListener("load", renderHome());
 function renderNav() {
 
     let navigation = document.createElement("nav");
-    navigation.className = "navbar";
+    navigation.classList.add("d-flex", "justify-content-center","flex-nowrap");
+    navigation.classList.add("shadow", "p-3", "mb-5","bg-secondary", "rounded");
+
+    //navigation.className = "navbar";
     let navList = document.createElement("ul");
     navList.className = "dawnnav";
     let navHome = document.createElement("LI");
@@ -24,6 +27,8 @@ function renderNav() {
 
     navigation.appendChild(navList);
     document.querySelector("body").appendChild(navigation);
+    document.body.classList.add("bg-light");
+
 }
 
 function renderLogin(){
@@ -31,6 +36,8 @@ function renderLogin(){
     let loginContainer = document.createElement("div");
     loginContainer.id = "login";
     loginContainer.className = "bannerLogin";
+    loginContainer.classList.add("form-group","text-center","justify-content-center");
+    loginContainer.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
             
     let usernameLabel = document.createElement("p");        // create username static label "Username"
     usernameLabel.innerText = "Username";
@@ -41,6 +48,7 @@ function renderLogin(){
     usernameInput.type = "text";
     usernameInput.placeholder = "username";
     loginContainer.appendChild(usernameInput);
+    usernameInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
     loginContainer.appendChild(document.createElement("br"));
 
     let passwordLabel = document.createElement("p");        // create password static label "Password"
@@ -52,17 +60,21 @@ function renderLogin(){
     passwordInput.id = "password";
     passwordInput.placeholder = "password";
     loginContainer.appendChild(passwordInput);
+    passwordInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
+    loginContainer.appendChild(document.createElement("br"));
     loginContainer.appendChild(document.createElement("br"));
 
     let submitButton = document.createElement("input");     // create submit button, goes to asyncLogin
     submitButton.type = "button";
     submitButton.value = "submit";
     submitButton.addEventListener("click", asyncLogin);
+    submitButton.classList.add("btn", "btn-primary","m-3");
     loginContainer.appendChild(submitButton);
 
     let resetButton = document.createElement("input");      // create reset button to clear input strings
     resetButton.type = "button";
     resetButton.value = "reset";
+    resetButton.classList.add("btn", "btn-primary");
     resetButton.addEventListener("click", function(){
         usernameInput.value = "";
         passwordInput.value = "";
@@ -112,11 +124,20 @@ function renderHome() {
     homebanner.id = "homebanner";
     homebanner.innerText = "Welcome to Mountain Project Lite";
     homediv.appendChild(homebanner);
+<<<<<<< HEAD
+    homebanner.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
+   // homebanner.classList.add("text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;");
+=======
 
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     let homepic = document.createElement("img");
     homepic.src = "https://dl.dropboxusercontent.com/s/eamnmm5u5efedfq/chrome_1NHD4eZ2qx.jpg";
     homepic.id = "homepic";
     homediv.appendChild(homepic);
+<<<<<<< HEAD
+    homepic.classList.add("shadow","shadow-info", "p-3", "mb-5", "rounded-circle")
+=======
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
 
     document.querySelector("body").appendChild(homediv);
 }
@@ -283,10 +304,19 @@ async function renderRoutesByLocation(location) {
     renderWeather(location.latlong);
     let nameHeader = document.createElement("h2");
     nameHeader.innerText = location.locationName;
+<<<<<<< HEAD
+    nameHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
+=======
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
 
     let locationRoutes = await getRoutesByLocation(location.id);
     let routeTable = document.createElement("table");
     routeTable.id = "routeTable";
+<<<<<<< HEAD
+    routeTable.classList.add("table", "table-striped");
+    routeTable.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
+=======
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     let routeHeader = document.createElement("tr");
     let thName = document.createElement("th");
     thName.innerText = "Route Name";
@@ -323,7 +353,12 @@ async function renderRoutesByLocation(location) {
 
     let backButton = document.createElement("input");
     backButton.type = "button";
+<<<<<<< HEAD
+    backButton.value = "Back ->";
+    backButton.classList.add("btn", "btn-info","text-center","justify-content-center");
+=======
     backButton.value = "Back";
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     backButton.onclick = renderLocations;
     document.querySelector("body").append(backButton, nameHeader, routeTable);
 }
@@ -332,21 +367,41 @@ function renderSearchHome() {
     derenderPage();
     let searchHeader = document.createElement("h2");
     searchHeader.innerText = "Search Routes By:"
+<<<<<<< HEAD
+    searchHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
+=======
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     document.querySelector("body").append(searchHeader);
     let searchDiv = document.createElement("div");
     let searchTypes = ['Name', 'Rating', 'Difficulty', 'Location'];
     let listeners = [searchByName, searchByRating, searchByDifficulty, searchByLocation];
     for (let i = 0; i < searchTypes.length; i++){
         let itemDiv = document.createElement("div");
+<<<<<<< HEAD
+        itemDiv.classList.add("row","align-items-center");
             let nameInput = document.createElement("input");
                 nameInput.type = "text";
+                nameInput.classList.add("form-control","col-4","w-25","mx-auto");
+=======
+            let nameInput = document.createElement("input");
+                nameInput.type = "text";
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
                 nameInput.id = `${searchTypes[i]}Search`;
                 nameInput.placeholder = `Search by ${searchTypes[i]}`;
             let searchBtn = document.createElement("button");
                 searchBtn.innerText = "Submit";
+<<<<<<< HEAD
+                searchBtn.classList.add("btn", "btn-primary","col-3");
                 searchBtn.addEventListener("click", listeners[i]);
         itemDiv.append(nameInput, searchBtn);
         searchDiv.appendChild(itemDiv);
+        searchDiv.appendChild(document.createElement("br"));
+        searchDiv.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
+=======
+                searchBtn.addEventListener("click", listeners[i]);
+        itemDiv.append(nameInput, searchBtn);
+        searchDiv.appendChild(itemDiv);
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     }
     document.querySelector("body").append(searchDiv);
 }
@@ -404,6 +459,11 @@ async function renderLocations() { //display list of locations
     derenderPage();
     let locations = await getLocations(); 
     let locationTable = document.createElement("table");
+<<<<<<< HEAD
+    locationTable.classList.add("table", "table-striped");
+    locationTable.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
+=======
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     locationTable.id = "locationTable";
     let locationHead = document.createElement("tr");
     let thName = document.createElement("th");
@@ -411,6 +471,10 @@ async function renderLocations() { //display list of locations
     let thCoords = document.createElement("th");
     thCoords.innerText = "Coordinates";
     locationHead.append(thName, thCoords);
+<<<<<<< HEAD
+    locationHead.classList.add("bg-warning");
+=======
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     locationTable.appendChild(locationHead);
 
     locationTable.id = "locationList";
@@ -441,6 +505,11 @@ async function renderWeather(latlong) {
     console.log(weather);
 
     let weatherDiv = document.createElement("div");
+<<<<<<< HEAD
+    weatherDiv.classList.add("form-group","text-center","justify-content-center");
+    weatherDiv.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
+=======
+>>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
 
     let locationInfo = document.createElement("h3");
     locationInfo.innerText = `Weather in ${weather.location.name}, ${weather.location.region}`;
