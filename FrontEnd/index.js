@@ -155,10 +155,13 @@ async function renderRoutesByLocation(location) {
     renderWeather(location.latlong);
     let nameHeader = document.createElement("h2");
     nameHeader.innerText = location.locationName;
+    nameHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
 
     let locationRoutes = await getRoutesByLocation(location.id);
     let routeTable = document.createElement("table");
     routeTable.id = "routeTable";
+    routeTable.classList.add("table", "table-striped");
+    routeTable.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
     let routeHeader = document.createElement("tr");
     let thName = document.createElement("th");
     thName.innerText = "Route Name";
@@ -195,7 +198,8 @@ async function renderRoutesByLocation(location) {
 
     let backButton = document.createElement("input");
     backButton.type = "button";
-    backButton.value = "Back";
+    backButton.value = "Back ->";
+    backButton.classList.add("btn", "btn-info","text-center","justify-content-center");
     backButton.onclick = renderLocations;
     document.querySelector("body").append(backButton, nameHeader, routeTable);
 }
@@ -322,6 +326,8 @@ async function renderWeather(latlong) {
     console.log(weather);
 
     let weatherDiv = document.createElement("div");
+    weatherDiv.classList.add("form-group","text-center","justify-content-center");
+    weatherDiv.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
 
     let locationInfo = document.createElement("h3");
     locationInfo.innerText = `Weather in ${weather.location.name}, ${weather.location.region}`;
