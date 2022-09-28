@@ -87,7 +87,6 @@ async function asyncLogin(){
         username: userInput,
         password: passInput
     };
-
     try{
         let response = await fetch(
             urlBase + path,
@@ -122,6 +121,139 @@ function renderHome() {
     document.querySelector("body").appendChild(homediv);
 }
 
+async function getUserById(id) {
+    const path = '/api/v1/users/';
+    const url = urlBase + path + id;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+async function updateUser(user){
+    const path = '/api/v1/users/';
+    const url = urlBase + path + user.user_id;
+
+    let updatedUser = {
+        userId : user.user_id,
+        username: user.username,
+        password: user.password,
+        description: user.description,
+        email: user.email,
+        photo_url: user.photo_url,
+        zipcode: user.zipcode
+    };
+    console.log(updatedUser);
+    try{
+        await fetch(
+            url,
+            {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedUser)}
+        )
+    }catch(error){
+        console.error(`Error is ${error}`);
+    }
+}
+
+function renderUserUpdate(user) {
+    derenderPage();
+    let updateDiv = document.createElement("div");
+    let updateBanner = document.createElement("h2");
+    updateBanner.innerText = 'Hello, what information would you like to update?';
+    let updateWarning = document.createElement("h3");
+    updateWarning.innerText = 'You cannot edit your username or email.';
+    let updateOptionList = document.createElement("ul");
+    let userPass = document.createElement("li");
+    userPass.innerText = 'Password';
+    let userPic = document.createElement("li");
+    userPic.innerText = 'User Photo URL';
+    let userDescription = document.createElement("li");
+    userDescription.innerText = 'User Description';
+    let userZip = document.createElement("li");
+    userZip.innerText = 'Zipcode';
+    updateOptionList.append(userPass, userPic, userDescription, userZip);
+    updateDiv.appendChild(updateOptionList);
+    
+    updateOptionList.onclick = async function(event) {
+        if (event.target.innerText == 'Password') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Update your Password:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New Password';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {user['password'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateUser(user)})
+            updateBtn.addEventListener("click", function() {renderUserHome(user)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+
+        if (event.target.innerText == 'User Photo URL') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Enter your new photo URL:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New URL';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {user['photo_url'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateUser(user)})
+            updateBtn.addEventListener("click", function() {renderUserHome(user)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+
+        if (event.target.innerText == 'Zipcode') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Enter your new Zipcode:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New Zipcode';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {user['zipcode'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateUser(user)})
+            updateBtn.addEventListener("click", function() {renderUserHome(user)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+
+        if (event.target.innerText == 'User Description') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Enter your user description:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New bio';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {user['description'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateUser(user)})
+            updateBtn.addEventListener("click", function() {renderUserHome(user)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+    }
+    document.querySelector("body").appendChild(updateDiv);
+
+}
+
 function renderUserHome(user){
     derenderPage();
     let userinfoDiv = document.createElement("div");
@@ -130,9 +262,19 @@ function renderUserHome(user){
     let userpic = document.createElement("img");
     userpic.id = "userpic";
     userpic.src = user.photo_url;
-    console.log(user);
+    let userDescription = document.createElement("p");
+    userDescription.innerText = 'Bio: ' + user.description;
+    let userZip = document.createElement("p");
+    userZip.innerText = 'Zipcode: ' + user.zipcode;
+    let userEmail = document.createElement("p");
+    userEmail.innerText = 'Email: ' + user.email;
 
-    userinfoDiv.append(userbanner, userpic);
+    let updateBtn = document.createElement("input");
+    updateBtn.type = "Button";
+    updateBtn.value = "Update User";
+    updateBtn.addEventListener("click", function() {renderUserUpdate(user)});
+
+    userinfoDiv.append(userbanner, userpic, userDescription, userEmail, userZip, updateBtn);
     document.querySelector("body").appendChild(userinfoDiv);
 }
 
