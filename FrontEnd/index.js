@@ -312,15 +312,16 @@ async function renderRoutesByLocation(location) {
     let thLength = document.createElement("th");
     thLength.innerText = "Length (feet)";
     routeHeader.append(thName, thDifficulty, thLength);
+    routeTable.append(routeHeader);
 
     for (i=0; i<locationRoutes.length; i++){
         let routeItem = document.createElement("tr");
-        let tdName = document.createElement("tr");
+        let tdName = document.createElement("td");
         tdName.innerText = locationRoutes[i].name;
         tdName.id = locationRoutes[i].route_id;
-        let tdDifficulty = document.createElement("tr");
+        let tdDifficulty = document.createElement("td");
         tdDifficulty.innerText = locationRoutes[i].difficulty;
-        let tdLength = document.createElement("tr");
+        let tdLength = document.createElement("td");
         tdLength.innerText = locationRoutes[i].length;
         routeItem.append(tdName, tdDifficulty, tdLength);
         routeTable.append(routeItem);
@@ -330,12 +331,6 @@ async function renderRoutesByLocation(location) {
         routeId = event.target.id;
         let route = await getRouteById(routeId);
         renderRoute(route);
-
-        // let backButton = document.createElement("input");
-        // backButton.type = "button";
-        // backButton.value = "Back";
-        // backButton.onclick = await renderRoutesByLocation(route.location_id);
-        // document.querySelector("body").append(backButton);  
     }
 
     let backButton = document.createElement("input");
@@ -353,8 +348,8 @@ function renderSearchHome() {
     searchHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
     document.querySelector("body").append(searchHeader);
     let searchDiv = document.createElement("div");
-    let searchTypes = ['Name', 'Rating', 'Difficulty', 'Location'];
-    let listeners = [searchByName, searchByRating, searchByDifficulty, searchByLocation];
+    let searchTypes = ['Name', 'Rating', 'Difficulty'];
+    let listeners = [searchByName, searchByRating, searchByDifficulty];
     for (let i = 0; i < searchTypes.length; i++){
         let itemDiv = document.createElement("div");
         itemDiv.classList.add("row","align-items-center");
@@ -376,7 +371,11 @@ function renderSearchHome() {
 }
 
 const searchByName = async function() {
-    let compressRoutes = await getAllRoutesCompress();
+    let allRoutes = await getAllRoutes();
+    let compressRoutes = allRoutes;
+    for (let route of compressRoutes) {
+        route['name'] = route['name'].replaceAll(/[^a-zA-Z0-9]/g, "").toLowerCase();
+    }
     let nameInput = document.querySelector("#NameSearch").value;
     let inputCompress = nameInput.replaceAll(/[^a-zA-Z0-9]/g, "").toLowerCase();
     for (let route of compressRoutes) {
@@ -392,11 +391,51 @@ const searchByRating = async function() {
 }
 
 const searchByDifficulty = async function() {
-    console.log('5');
-}
+    let diffInput = document.querySelector("#DifficultySearch").value;
+    derenderPage();
+    let allRoutes = await getAllRoutes();
+    let routeTable = document.createElement("table");
+    routeTable.id = "routeTable";
+    routeTable.classList.add("table", "table-striped");
+    routeTable.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
+    let routeHeader = document.createElement("tr");
+    let thName = document.createElement("th");
+    thName.innerText = "Route Name";
+    let thLocation = document.createElement("th");
+    thLocation.innerText = "Location";
+    let thDifficulty = document.createElement("th");
+    thDifficulty.innerText = "Difficulty";
+    let thLength = document.createElement("th");
+    thLength.innerText = "Length (feet)";
+    routeHeader.append(thName, thLocation, thDifficulty, thLength);
+    routeTable.append(routeHeader);
 
-const searchByLocation = async function() {
-    console.log('5');
+    for (let route of allRoutes){
+        if (route.difficulty==diffInput){
+            let routeItem = document.createElement("tr");
+            let tdName = document.createElement("td");
+            tdName.innerText = route.name;
+            tdName.id = route.route_id;
+            let tdLocation = document.createElement("td");
+            tdLocation.innerText = route.location_id.locationName;
+            let tdDifficulty = document.createElement("td");
+            tdDifficulty.innerText = route.difficulty;
+            let tdLength = document.createElement("td");
+            tdLength.innerText = route.length;
+            routeItem.append(tdName, tdLocation, tdDifficulty, tdLength);
+            routeTable.append(routeItem);
+        }
+    }
+
+    routeTable.onclick = async function(event) {
+        routeId = event.target.id;
+        let route = await getRouteById(routeId);
+        renderRoute(route);
+    }
+
+    let diffDisplay = document.createElement("h2");
+    diffDisplay.innerText = `Routes of difficulty: ${diffInput}`;
+    document.querySelector("body").append(routeTable);
 }
 
 const renderRoute = async function(route) {
@@ -405,12 +444,20 @@ const renderRoute = async function(route) {
     let routeDiv = document.createElement("div");
         let routeHeader = document.createElement("h2");
         routeHeader.innerText = `${route.name}`;
+        let routeImage;
+        if (route.photo_url!=null){
+            routeImage = document.createElement("img");
+            routeImage.src = `${route.photo_url}`;
+        }
         let routeDifficulty = document.createElement("p");
         routeDifficulty.innerText = `YDS Rating: 5.${route.difficulty}`;
         let routeLength = document.createElement("p");
         routeLength.innerText = `Length: ${route.length} feet`;
 
-    routeDiv.append(routeHeader, routeDifficulty);
+    routeDiv.append(routeHeader)
+    if (route.photo_url!=null)
+        routeDiv.append(routeImage);
+    routeDiv.append(routeDifficulty, routeLength);
     
     let locationDiv = document.createElement("div");
         let locationName = document.createElement("h2");
@@ -555,25 +602,6 @@ async function getAllRoutes() {
 const getRouteById = async function(id) {
     const path = '/api/v1/routes/';
     const url = urlBase + path + id;
-    try {
-        let response = await fetch(
-            url,
-            {
-                method: "GET",
-                headers: new Headers({'content-type':'application/json'}),
-                body: null
-            })
-            let data = await response.json();
-            return data;
-
-    } catch (error) {
-        console.error(`Error is ${error}`)
-    }
-}
-
-async function getAllRoutesCompress() {
-    const path = '/api/v1/routescompress';
-    const url = urlBase + path;
     try {
         let response = await fetch(
             url,

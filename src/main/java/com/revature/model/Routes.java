@@ -30,9 +30,9 @@ public class Routes {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="location_id")
 	private Locations location_id;
-	
 	private String difficulty;
 	private Integer length;
+	private String photo_url;
 	
 
 }

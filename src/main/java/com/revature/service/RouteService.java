@@ -46,13 +46,6 @@ public class RouteService {
 		return locationRoutes;
 	}
 	
-	public List <Routes> getRoutesCompressed(){
-		List<Routes> routes = routeRepository.findAll();
-		for (Routes route:routes)
-			route.setName(route.getName().replaceAll("[^a-zA-Z0-9]", "").toLowerCase());
-		return routes;
-	}
-	
 	public List <Routes> getRoutes(){
 		return routeRepository.findAll();
 	}
@@ -71,6 +64,7 @@ public class RouteService {
 		updateRoute.setDifficulty(route.getDifficulty());
 		updateRoute.setLength(route.getLength());
 		updateRoute.setName(route.getName());
+		updateRoute.setPhoto_url(route.getPhoto_url());
 		
 		routeRepository.save(updateRoute);
 	}

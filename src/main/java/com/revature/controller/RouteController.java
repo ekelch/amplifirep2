@@ -44,12 +44,6 @@ public class RouteController {
 		return routeService.getRoutes();
 	}
 	
-	//Get all routes with no spaces or special characters in name
-		@GetMapping("/api/v1/routescompress")
-		public List<Routes> getRoutesCompressed(){
-			return routeService.getRoutesCompressed();
-		}
-	
 	//Get all routes at location
 	@GetMapping("/api/v1/routesByLocationId/{id}")
 	public List<Routes> getRoutesByLocationId(@PathVariable("id") Integer id) throws LocationNotFoundException {
