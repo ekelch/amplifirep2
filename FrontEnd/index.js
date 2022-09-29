@@ -437,25 +437,50 @@ function renderUserUpdate(user) {
 
 function renderUserHome(user){
     derenderPage();
+    //Title User
     let userinfoDiv = document.createElement("div");
-    let userbanner = document.createElement("h1");
+    let userbanner = document.createElement("h3");
     userbanner.innerText = 'Welcome, ' + user.username + '!';
+    userbanner.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
+    userinfoDiv.classList.add("text-center");
+
+    //div for colimg and coltext
+    let userpictextDiv = document.createElement("div");
+    //userpictextDiv.classList.add("raw");
+    //div img or colimg
+    let userpicDiv = document.createElement("div");
     let userpic = document.createElement("img");
     userpic.id = "userpic";
     userpic.src = user.photo_url;
+    userpicDiv.appendChild(userpic);
+    userpicDiv.classList.add("d-inline-block")
+    //userpicDiv.classList.add("col-md-6");
+    userpic.classList.add("rounded-circle","shadow-lg", "p-3", "mb-5", "bg-white","w-75","h-75");
+    userpictextDiv.appendChild(userpicDiv);
+
+    //div text or coltext
+    let usertextinfoDiv = document.createElement("div");
     let userDescription = document.createElement("p");
     userDescription.innerText = 'Bio: ' + user.description;
+    usertextinfoDiv.appendChild(userDescription);
     let userZip = document.createElement("p");
     userZip.innerText = 'Zipcode: ' + user.zipcode;
+    usertextinfoDiv.appendChild(userZip);
     let userEmail = document.createElement("p");
     userEmail.innerText = 'Email: ' + user.email;
+    usertextinfoDiv.appendChild(userEmail);
+    usertextinfoDiv.classList.add("d-inline-block","shadow-lg", "p-3", "mb-5", "bg-white", "rounded")
+    //usertextinfoDiv.classList.add("col-md-6");
+    userpictextDiv.appendChild(usertextinfoDiv);
 
     let updateBtn = document.createElement("input");
     updateBtn.type = "Button";
     updateBtn.value = "Update User";
+    updateBtn.classList.add("btn", "btn-info");
+    usertextinfoDiv.appendChild(updateBtn);
     updateBtn.addEventListener("click", function() {renderUserUpdate(user)});
 
-    userinfoDiv.append(userbanner, userpic, userDescription, userEmail, userZip, updateBtn);
+    userinfoDiv.append(userbanner,userpictextDiv);
     document.querySelector("body").appendChild(userinfoDiv);
 }
 
