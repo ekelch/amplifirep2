@@ -6,4 +6,8 @@ import com.revature.model.TickTable;
 
 public interface TickTableRepository extends JpaRepository<TickTable, Integer>{
 
+
+
 }
+
+

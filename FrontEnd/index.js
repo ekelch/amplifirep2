@@ -29,6 +29,7 @@ function renderNav() {
     document.querySelector("body").appendChild(navigation);
     document.body.classList.add("bg-light");
 
+   
 }
 
 function renderLogin(){
@@ -88,6 +89,7 @@ function renderLogin(){
 function derenderPage(){
     document.querySelector("body").innerHTML = "";
     renderNav();
+    //renderGalerie();
 }
 
 async function asyncLogin(){
@@ -118,21 +120,72 @@ async function asyncLogin(){
 
 function renderHome() {
     derenderPage();
-    let homediv = document.createElement("div");
+    renderGalerie();
+}
+function renderGalerie(){
 
-    let homebanner = document.createElement("h1");
-    homebanner.id = "homebanner";
-    homebanner.innerText = "Welcome to Mountain Project Lite";
-    homediv.appendChild(homebanner);
-    homebanner.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
-   // homebanner.classList.add("text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;");
-    let homepic = document.createElement("img");
-    homepic.src = "https://dl.dropboxusercontent.com/s/eamnmm5u5efedfq/chrome_1NHD4eZ2qx.jpg";
-    homepic.id = "homepic";
-    homediv.appendChild(homepic);
-    homepic.classList.add("shadow","shadow-info", "p-3", "mb-5", "rounded-circle")
+    let images = [
+        'https://dl.dropboxusercontent.com/s/z6mizq6hfjqk0c0/amarilloParadise-084.jpg',
+        'https://dl.dropboxusercontent.com/s/njj3ux6by318d3j/IMG_4344.jpg',
+        'https://dl.dropboxusercontent.com/s/s4aotdwvdfa9wjs/amarilloParadise-029.jpg',
+        'https://dl.dropboxusercontent.com/s/2jrq7hcv9l0yb2c/amarilloParadise-111.jpg',
+        'https://dl.dropboxusercontent.com/s/puow5fvtmejlxq0/IMG_4221.jpg',
+        'https://dl.dropboxusercontent.com/s/ams56tolz9m5c24/IMG_4726.jpg',
+        'https://dl.dropboxusercontent.com/s/rluw03et67757ve/IMG_3505.jpg'
+    ];
 
-    document.querySelector("body").appendChild(homediv);
+    let i = 0;
+    let selectionDiv = document.createElement("div");
+    selectionDiv.className ="slider";
+    let divImg = document.createElement("div");
+    divImg.className ="img-box";
+
+    let galeriPic1 = document.createElement("img");
+    galeriPic1.src = "https://dl.dropboxusercontent.com/s/z6mizq6hfjqk0c0/amarilloParadise-084.jpg";
+    galeriPic1.id = "galeriPic1";
+    galeriPic1.className="slider-img";
+    divImg.appendChild(galeriPic1);
+/*
+    let nextButton = document.createElement("input");      // create next button to slide
+    nextButton.type = "button";
+    nextButton.value = "Next =>";
+    nextButton.className = "btn";
+    nextButton.id = "nextb";
+    nextButton.addEventListener("click", function(){
+        if(i >= images.length-1) i = -1;
+        i++;
+        return setImg();			
+    });
+    
+    let prevButton = document.createElement("input");      // create prev button to slide
+    prevButton.type = "button";
+    prevButton.value = " <= prev";
+    prevButton.className = "btn";
+    prevButton.id = "prevb";
+    prevButton.addEventListener("click", function(){
+        if(i <= 0) i = images.length;	
+        i--;
+        return setImg();				
+    });*/
+    function moveGalery() {
+        if(i <= 0) i = images.length;	
+        i--;	
+        return setImg();	
+        		
+    }
+
+    window.setInterval(moveGalery, 2000);
+
+    function setImg(){
+        return galeriPic1.setAttribute('src', images[i]);
+    }
+
+    selectionDiv.append(divImg);
+    document.querySelector("body").appendChild(selectionDiv);
+    console.log("5");
+
+
+
 }
 
 async function getUserById(id) {
