@@ -50,7 +50,7 @@ public class RouteService {
 		return locationRoutes;
 	}
 	
-	public List <Routes> getRoutes(){
+	public List <Routes> getListOfRoutes(){
 		return routeRepository.findAll();
 	}
 

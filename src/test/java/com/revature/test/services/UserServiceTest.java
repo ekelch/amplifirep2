@@ -3,6 +3,7 @@ package com.revature.test.services;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -36,21 +37,21 @@ public class UserServiceTest {
 	@BeforeEach
 	void setUp() {
 		underTest = new UserService(userRepository);
+		
 	}
+	
+	Users user = new Users(
+			1,
+			"user1",
+			"pass1",
+			"user1@email.com",
+			"i love sde",
+			90778,
+			"https://dl.dropboxusercontent.com/s/av08po3cupbll0g/chrome_Qtl2u3xBZy.jpg"
+			);
 	
 	@Test
 	void CanRegister() {
-		//given
-		Users user = new Users(
-				1,
-				"user1",
-				"pass1",
-				"user1@email.com",
-				"i love sde",
-				90778,
-				"https://dl.dropboxusercontent.com/s/av08po3cupbll0g/chrome_Qtl2u3xBZy.jpg"
-				);
-		
 		// when
 		underTest.register(user);
 		
@@ -73,19 +74,10 @@ public class UserServiceTest {
 	@Test
 	void CanDoLogin() throws UserNotFoundException {
 		//given
-		Users user = new Users(
-				1,
-				"user1",
-				"pass1",
-				"user1@email.com",
-				"i love sde",
-				90778,
-				"https://dl.dropboxusercontent.com/s/av08po3cupbll0g/chrome_Qtl2u3xBZy.jpg"
-				);
 		given(userRepository.findByUsernameAndPassword("user1", "pass1")).willReturn(Optional.of(user));
 		//when
 		Users result = underTest.login(user);
-		System.out.println(result);
+
 		assertThat(result).isNotNull();
 		verify(userRepository).findByUsernameAndPassword(user.getUsername(), user.getPassword());
 	}
@@ -93,16 +85,6 @@ public class UserServiceTest {
 	@Test
 	void CanGetUser() throws UserNotFoundException {
 		// given
-		Users user = new Users(
-				1,
-				"user1",
-				"pass1",
-				"user1@email.com",
-				"i love sde",
-				90778,
-				"https://dl.dropboxusercontent.com/s/av08po3cupbll0g/chrome_Qtl2u3xBZy.jpg"
-				);
-		
 		given(userRepository.findById(1)).willReturn(Optional.of(user));
 		// when
 		Users expected = underTest.getUser(user.getUser_id());
@@ -116,15 +98,6 @@ public class UserServiceTest {
 	@Disabled
 	void CanUpdateUser() throws UserNotFoundException {
 		// given
-		Users user = new Users(
-				1,
-				"user1",
-				"pass1",
-				"user1@email.com",
-				"i love sd",
-				90778,
-				"https://dl.dropboxusercontent.com/s/av08po3cupbll0g/chrome_Qtl2u3xBZy.jpg"
-				);
 		given(userRepository.save(user)).willReturn(user);
 		user.setPassword("pass2");
 		user.setDescription("i love sw");
@@ -142,16 +115,6 @@ public class UserServiceTest {
 	@Test
 	@Disabled
 	void CanDeleteUser() throws UserNotFoundException {
-		//given
-		Users user = new Users(
-				1,
-				"user1",
-				"pass1",
-				"user1@email.com",
-				"i love sde",
-				90778,
-				"https://dl.dropboxusercontent.com/s/av08po3cupbll0g/chrome_Qtl2u3xBZy.jpg"
-				);
 		//when
 		underTest.deleteUser(user.getUser_id());
 		verify(userRepository, times(1)).deleteById(user.getUser_id());
