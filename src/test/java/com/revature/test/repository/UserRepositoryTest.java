@@ -14,17 +14,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.revature.model.Users;
 import com.revature.repository.UserRepository;
 
-
 @DataJpaTest
 public class UserRepositoryTest {
 
 	@Autowired
 	private UserRepository underTest;
 	
-//	@AfterEach
-//	void tearDown() {
-//		underTest.deleteAll();
-//	}
+	@AfterEach
+	void tearDown() {
+		underTest.deleteAll();
+	}
 	
 	
 	@Test

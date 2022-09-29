@@ -95,7 +95,6 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	@Disabled
 	void CanUpdateUser() throws UserNotFoundException {
 		// given
 		given(userRepository.save(user)).willReturn(user);
@@ -113,7 +112,6 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	@Disabled
 	void CanDeleteUser() throws UserNotFoundException {
 		//when
 		underTest.deleteUser(user.getUser_id());
