@@ -29,6 +29,7 @@ function renderNav() {
     document.querySelector("body").appendChild(navigation);
     document.body.classList.add("bg-light");
 
+   
 }
 
 function renderLogin(){
@@ -88,6 +89,7 @@ function renderLogin(){
 function derenderPage(){
     document.querySelector("body").innerHTML = "";
     renderNav();
+    //renderGalerie();
 }
 
 async function asyncLogin(){
@@ -119,28 +121,76 @@ async function asyncLogin(){
 
 function renderHome() {
     derenderPage();
-    let homediv = document.createElement("div");
+    renderGalerie();
 
-    let homebanner = document.createElement("h1");
-    homebanner.id = "homebanner";
-    homebanner.innerText = "Welcome to Mountain Project Lite";
-    homediv.appendChild(homebanner);
-<<<<<<< HEAD
-    homebanner.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
-   // homebanner.classList.add("text-shadow: 1px 1px 2px red, 0 0 1em blue, 0 0 0.2em blue;");
-=======
+    
+    
+}
+function renderGalerie(){
 
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
-    let homepic = document.createElement("img");
-    homepic.src = "https://dl.dropboxusercontent.com/s/eamnmm5u5efedfq/chrome_1NHD4eZ2qx.jpg";
-    homepic.id = "homepic";
-    homediv.appendChild(homepic);
-<<<<<<< HEAD
-    homepic.classList.add("shadow","shadow-info", "p-3", "mb-5", "rounded-circle")
-=======
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
+    let images = [
+        'https://dl.dropboxusercontent.com/s/z6mizq6hfjqk0c0/amarilloParadise-084.jpg',
+        'https://dl.dropboxusercontent.com/s/njj3ux6by318d3j/IMG_4344.jpg',
+        'https://dl.dropboxusercontent.com/s/s4aotdwvdfa9wjs/amarilloParadise-029.jpg',
+        'https://dl.dropboxusercontent.com/s/2jrq7hcv9l0yb2c/amarilloParadise-111.jpg',
+        'https://dl.dropboxusercontent.com/s/puow5fvtmejlxq0/IMG_4221.jpg',
+        'https://dl.dropboxusercontent.com/s/ams56tolz9m5c24/IMG_4726.jpg',
+        'https://dl.dropboxusercontent.com/s/rluw03et67757ve/IMG_3505.jpg'
+    ];
 
-    document.querySelector("body").appendChild(homediv);
+    let i = 0;
+    let selectionDiv = document.createElement("div");
+    selectionDiv.className ="slider";
+    let divImg = document.createElement("div");
+    divImg.className ="img-box";
+
+    let galeriPic1 = document.createElement("img");
+    galeriPic1.src = "https://dl.dropboxusercontent.com/s/z6mizq6hfjqk0c0/amarilloParadise-084.jpg";
+    galeriPic1.id = "galeriPic1";
+    galeriPic1.className="slider-img";
+    divImg.appendChild(galeriPic1);
+/*
+    let nextButton = document.createElement("input");      // create next button to slide
+    nextButton.type = "button";
+    nextButton.value = "Next =>";
+    nextButton.className = "btn";
+    nextButton.id = "nextb";
+    nextButton.addEventListener("click", function(){
+        if(i >= images.length-1) i = -1;
+        i++;
+        return setImg();			
+    });
+    
+    let prevButton = document.createElement("input");      // create prev button to slide
+    prevButton.type = "button";
+    prevButton.value = " <= prev";
+    prevButton.className = "btn";
+    prevButton.id = "prevb";
+    prevButton.addEventListener("click", function(){
+        if(i <= 0) i = images.length;	
+        i--;
+        return setImg();				
+    });*/
+    function moveGalery() {
+        if(i <= 0) i = images.length;	
+        i--;	
+        return setImg();	
+        		
+    }
+
+    window.setInterval(moveGalery, 2000);
+
+    function setImg(){
+        return galeriPic1.setAttribute('src', images[i]);
+    }
+
+    selectionDiv.append(divImg);
+    document.querySelector("body").appendChild(selectionDiv);
+    console.log("5");
+
+
+
+
 }
 
 function renderUserHome(user){
@@ -162,19 +212,13 @@ async function renderRoutesByLocation(location) {
     renderWeather(location.latlong);
     let nameHeader = document.createElement("h2");
     nameHeader.innerText = location.locationName;
-<<<<<<< HEAD
     nameHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
-=======
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
 
     let locationRoutes = await getRoutesByLocation(location.id);
     let routeTable = document.createElement("table");
     routeTable.id = "routeTable";
-<<<<<<< HEAD
     routeTable.classList.add("table", "table-striped");
     routeTable.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
-=======
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     let routeHeader = document.createElement("tr");
     let thName = document.createElement("th");
     thName.innerText = "Route Name";
@@ -211,12 +255,8 @@ async function renderRoutesByLocation(location) {
 
     let backButton = document.createElement("input");
     backButton.type = "button";
-<<<<<<< HEAD
     backButton.value = "Back ->";
     backButton.classList.add("btn", "btn-info","text-center","justify-content-center");
-=======
-    backButton.value = "Back";
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     backButton.onclick = renderLocations;
     document.querySelector("body").append(backButton, nameHeader, routeTable);
 }
@@ -225,41 +265,27 @@ function renderSearchHome() {
     derenderPage();
     let searchHeader = document.createElement("h2");
     searchHeader.innerText = "Search Routes By:"
-<<<<<<< HEAD
     searchHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
-=======
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     document.querySelector("body").append(searchHeader);
     let searchDiv = document.createElement("div");
     let searchTypes = ['Name', 'Rating', 'Difficulty', 'Location'];
     let listeners = [searchByName, searchByRating, searchByDifficulty, searchByLocation];
     for (let i = 0; i < searchTypes.length; i++){
         let itemDiv = document.createElement("div");
-<<<<<<< HEAD
         itemDiv.classList.add("row","align-items-center");
             let nameInput = document.createElement("input");
                 nameInput.type = "text";
                 nameInput.classList.add("form-control","col-4","w-25","mx-auto");
-=======
-            let nameInput = document.createElement("input");
-                nameInput.type = "text";
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
                 nameInput.id = `${searchTypes[i]}Search`;
                 nameInput.placeholder = `Search by ${searchTypes[i]}`;
             let searchBtn = document.createElement("button");
                 searchBtn.innerText = "Submit";
-<<<<<<< HEAD
                 searchBtn.classList.add("btn", "btn-primary","col-3");
                 searchBtn.addEventListener("click", listeners[i]);
         itemDiv.append(nameInput, searchBtn);
         searchDiv.appendChild(itemDiv);
         searchDiv.appendChild(document.createElement("br"));
         searchDiv.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
-=======
-                searchBtn.addEventListener("click", listeners[i]);
-        itemDiv.append(nameInput, searchBtn);
-        searchDiv.appendChild(itemDiv);
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     }
     document.querySelector("body").append(searchDiv);
 }
@@ -317,11 +343,8 @@ async function renderLocations() { //display list of locations
     derenderPage();
     let locations = await getLocations(); 
     let locationTable = document.createElement("table");
-<<<<<<< HEAD
     locationTable.classList.add("table", "table-striped");
     locationTable.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
-=======
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     locationTable.id = "locationTable";
     let locationHead = document.createElement("tr");
     let thName = document.createElement("th");
@@ -329,10 +352,7 @@ async function renderLocations() { //display list of locations
     let thCoords = document.createElement("th");
     thCoords.innerText = "Coordinates";
     locationHead.append(thName, thCoords);
-<<<<<<< HEAD
     locationHead.classList.add("bg-warning");
-=======
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
     locationTable.appendChild(locationHead);
 
     locationTable.id = "locationList";
@@ -363,11 +383,8 @@ async function renderWeather(latlong) {
     console.log(weather);
 
     let weatherDiv = document.createElement("div");
-<<<<<<< HEAD
     weatherDiv.classList.add("form-group","text-center","justify-content-center");
     weatherDiv.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
-=======
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
 
     let locationInfo = document.createElement("h3");
     locationInfo.innerText = `Weather in ${weather.location.name}, ${weather.location.region}`;

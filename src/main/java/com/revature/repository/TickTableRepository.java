@@ -6,8 +6,6 @@ import com.revature.model.TickTable;
 
 public interface TickTableRepository extends JpaRepository<TickTable, Integer>{
 
-<<<<<<< HEAD
+
 }
-=======
-}
->>>>>>> a0886dedd99975cd3b82cb76c49fc4266dba71ed
+
