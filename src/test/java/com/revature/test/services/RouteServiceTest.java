@@ -102,7 +102,7 @@ public class RouteServiceTest {
 	@Test
 	void canDeleteRoute() throws RouteNotFoundException {
 		//given
-		underTest.deleteRoute(1);
+		underTest.deleteRoute(route.getRoute_id());
 		//when
 		verify(routeRepository,times(1)).deleteById(1);
 		//then
