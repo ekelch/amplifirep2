@@ -55,53 +55,53 @@ function renderPostUser(){
     let usernameInput = document.createElement("input");    // create username input variable "user1"
     usernameInput.id = "username";
     usernameInput.type = "text";
-    usernameInput.placeholder = "username";
+    usernameInput.placeholder = "Username";
     userPosetContainer.appendChild(usernameInput);
     usernameInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
 
     let passwordLabel = document.createElement("h5");        // create password static label "Password"
-    passwordLabel.innerText = "Password";
+    passwordLabel.innerText = "Password :";
     userPosetContainer.appendChild(passwordLabel);
 
     let passwordInput = document.createElement("input");    // create password input variable "pass1"
     passwordInput.type = "password";
     passwordInput.id = "password";
-    passwordInput.placeholder = "password";
+    passwordInput.placeholder = "Password";
     userPosetContainer.appendChild(passwordInput);
     passwordInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
     
     userPosetContainer.appendChild(document.createElement("br"));
 
     let emailLabel = document.createElement("h5");        // create email  label
-    emailLabel.innerText = " email";
+    emailLabel.innerText = "Email :";
     userPosetContainer.appendChild(emailLabel);
 
     let emailInput = document.createElement("input");    // create email input variable 
     emailInput.type = "text";
     emailInput.id = "email";
-    emailInput.placeholder = "email";
+    emailInput.placeholder = "Email";
     userPosetContainer.appendChild(emailInput);
     emailInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
 
     let descriptionLabel = document.createElement("h5");        // create description  label 
-    descriptionLabel.innerText = "description";
-    userPosetContainer.appendChild(emailLabel);
+    descriptionLabel.innerText = "Description :";
+    userPosetContainer.appendChild(descriptionLabel);
 
     let descriptionInput = document.createElement("input");    // create description input variable 
     descriptionInput.type = "text";
     descriptionInput.id = "description";
-    descriptionInput.placeholder = "description";
+    descriptionInput.placeholder = "Description (Optional)";
     userPosetContainer.appendChild(descriptionInput);
     descriptionInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
 
     let zipcodeLabel = document.createElement("h5");        // create zipcode  label "
-    zipcodeLabel.innerText = "zip code";
+    zipcodeLabel.innerText = "Zipcode :";
     userPosetContainer.appendChild(zipcodeLabel);
 
     let zipcodeInput = document.createElement("input");    // create zipcode input variable
     zipcodeInput.type = "text";
     zipcodeInput.id = "zipcode";
-    zipcodeInput.placeholder = "zip code";
+    zipcodeInput.placeholder = "Zipcode (Optional)";
     userPosetContainer.appendChild(zipcodeInput);
     zipcodeInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
 
@@ -112,7 +112,7 @@ function renderPostUser(){
     let photourlInput = document.createElement("input");    // create photourl input variable 
     photourlInput.type = "text";
     photourlInput.id = "photourl";
-    photourlInput.placeholder = "Photo URL";
+    photourlInput.placeholder = "Photo URL (Optional)";
     userPosetContainer.appendChild(photourlInput);
     photourlInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
 
@@ -125,7 +125,7 @@ function renderPostUser(){
     
     submitButton.onclick = async function() {
         let newUser;
-        if (usernameInput.value != '' & passwordInput.value != '' & emailInput.value != '' & descriptionInput.value != '' & zipcodeInput.value != '') { 
+        if (usernameInput.value != '' & passwordInput.value != '' & emailInput.value != '') { 
             newUser = {
                 username: usernameInput.value,
                 password: passwordInput.value,
@@ -238,6 +238,10 @@ function renderHome() {
 }
 function renderGalerie(){
 
+    let welcomeBanner = document.createElement("h1");
+    welcomeBanner.id = 'welcomeBanner';
+    welcomeBanner.innerText = "Welcome to Mountain Project Lite!";
+
     let images = [
         'https://dl.dropboxusercontent.com/s/z6mizq6hfjqk0c0/amarilloParadise-084.jpg',
         'https://dl.dropboxusercontent.com/s/njj3ux6by318d3j/IMG_4344.jpg',
@@ -288,13 +292,14 @@ function renderGalerie(){
         		
     }
 
-    window.setInterval(moveGalery, 2000);
+    window.setInterval(moveGalery, 4000);
 
     function setImg(){
         return galeriPic1.setAttribute('src', images[i]);
     }
 
     selectionDiv.append(divImg);
+    document.querySelector("body").appendChild(welcomeBanner);
     document.querySelector("body").appendChild(selectionDiv);
     console.log("5");
 
@@ -318,36 +323,6 @@ async function getUserById(id) {
 
     } catch (error) {
         console.error(`Error is ${error}`)
-    }
-}
-
-async function updateUser(user){
-    const path = '/api/v1/users/';
-    const url = urlBase + path + user.user_id;
-
-    let updatedUser = {
-        userId : user.user_id,
-        username: user.username,
-        password: user.password,
-        description: user.description,
-        email: user.email,
-        photo_url: user.photo_url,
-        zipcode: user.zipcode
-    };
-    console.log(updatedUser);
-    try{
-        await fetch(
-            url,
-            {
-                method: "PUT",
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedUser)}
-        )
-    }catch(error){
-        console.error(`Error is ${error}`);
     }
 }
 
@@ -633,6 +608,88 @@ const renderAddRoute = async function(location) {
     
 }
 
+const renderUpdateRoute = async function(route) {
+    derenderPage();
+    let updateDiv = document.createElement("div");
+    let updateBanner = document.createElement("h2");
+    updateBanner.innerText = 'What information would you like to update?';
+    let updateOptionList = document.createElement("ul");
+    let routeName = document.createElement("li");
+    routeName.innerText = 'Route Name';
+    let routeLength = document.createElement("li");
+    routeLength.innerText = 'Length (feet)';
+    let routePic = document.createElement("li");
+    routePic.innerText = 'Route Photo URL';
+    let routeDifficulty = document.createElement("li");
+    routeDifficulty.innerText = 'Route Difficulty';
+    updateOptionList.append(routeName, routeDifficulty, routePic, routeLength);
+    updateDiv.appendChild(updateOptionList);
+    
+    updateOptionList.onclick = async function(event) {
+        if (event.target.innerText == 'Route Name') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Update route name:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New Route Name';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {route['name'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateRoute(route)})
+            updateBtn.addEventListener("click", function() {renderRoute(route)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+
+        if (event.target.innerText == 'Route Photo URL') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Enter your new photo URL:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New URL';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {route['photo_url'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateRoute(route)})
+            updateBtn.addEventListener("click", function() {renderRoute(route)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+
+        if (event.target.innerText == 'Length (feet)') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Enter new route length:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'Length (feet)';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {route['length'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateRoute(route)})
+            updateBtn.addEventListener("click", function() {renderRoute(route)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+
+        if (event.target.innerText == 'Route Difficulty') {
+            derenderPage();
+            let updateType = document.createElement("h3");
+            updateType.innerText = "Enter your route difficulty:";
+            let updateInput = document.createElement("input");
+            updateInput.placeholder = 'New Difficulty';
+            let updateBtn = document.createElement("input");
+            updateBtn.type = "Button";
+            updateBtn.value = "Submit";
+            updateBtn.addEventListener("click", function() {route['difficulty'] = updateInput.value;})
+            updateBtn.addEventListener("click", function() {updateRoute(route)})
+            updateBtn.addEventListener("click", function() {renderRoute(route)})
+            document.querySelector("body").append(updateType, updateInput, updateBtn);
+        }
+    }
+    document.querySelector("body").appendChild(updateDiv);
+
+}
+
 const searchByRating = async function() {
     console.log('5');
 }
@@ -691,11 +748,10 @@ const renderRoute = async function(route) {
     let routeDiv = document.createElement("div");
         let routeHeader = document.createElement("h2");
         routeHeader.innerText = `${route.name}`;
-        let routeImage;
-        if (route.photo_url!=null){
-            routeImage = document.createElement("img");
+        let routeImage = document.createElement("img");
+        routeImage.id = "routeImage";
+        if (route.photo_url!=null)
             routeImage.src = `${route.photo_url}`;
-        }
         let routeDifficulty = document.createElement("p");
         routeDifficulty.innerText = `YDS Rating: 5.${route.difficulty}`;
         let routeLength = document.createElement("p");
@@ -713,8 +769,13 @@ const renderRoute = async function(route) {
         latlong.innerText = `Latitude/Longitude: ${route.location.latlong}`;
 
     locationDiv.append(locationName, latlong);
+
+    let updateBtn = document.createElement("input");
+    updateBtn.type = "Button";
+    updateBtn.value = "Update Route";
+    updateBtn.addEventListener("click", function() {renderUpdateRoute(route)});
         
-    document.querySelector("body").append(routeDiv, locationDiv);
+    document.querySelector("body").append(routeDiv, locationDiv, updateBtn);
     renderWeather(route.location.latlong);
 }
 
@@ -887,6 +948,36 @@ const postUser = async function(user){
 
 }
 
+async function updateUser(user){
+    const path = '/api/v1/users/';
+    const url = urlBase + path + user.user_id;
+
+    let updatedUser = {
+        userId : user.user_id,
+        username: user.username,
+        password: user.password,
+        description: user.description,
+        email: user.email,
+        photo_url: user.photo_url,
+        zipcode: user.zipcode
+    };
+    console.log(updatedUser);
+    try{
+        await fetch(
+            url,
+            {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedUser)}
+        )
+    }catch(error){
+        console.error(`Error is ${error}`);
+    }
+}
+
 const postRoute = async function(route, locationId){
     const path = '/api/v1/routes/';
     const url = urlBase + path + locationId;
@@ -900,6 +991,29 @@ const postRoute = async function(route, locationId){
             })
             let data = await response.json();
             return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+const updateRoute = async function(route){
+    const path = '/api/v1/routes/';
+    const url = urlBase + path + route.route_id;
+
+    if (route.photo_url != null)
+        route['photo_url'] = route.photo_url;
+    try {
+        await fetch(
+            url,
+            {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(route)
+            })
 
     } catch (error) {
         console.error(`Error is ${error}`)
@@ -926,7 +1040,7 @@ async function getRoutesByLocation(id) {
 }
 
 const getCurrentWeather = async function(latlong) {
-    const weatherApiUrl = 'http://api.weatherapi.com/v1/current.json?key=d4add7b7a6f24255aa8202015221509&q='; // documentation: https://www.weatherapi.com/api-explorer.aspx
+    const weatherApiUrl = 'http://api.weatherapi.com/v1/current.json?key=2816a8c2d0cf46e7a08140840222909&q='; // documentation: https://www.weatherapi.com/api-explorer.aspx
     const url = weatherApiUrl + latlong;
     try {
         let response = await fetch(

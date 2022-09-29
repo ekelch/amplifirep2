@@ -56,21 +56,24 @@ ul.routeList li:hover{
     color: rgb(255, 255, 255);
     border-radius: 15px;
 }
-/* 
+
 #userpic {
-    width: 500px;
+    width: 600px;
 }
 
-#homepic {
+#routeImage {
+    max-width: 1000px;
+    max-height: 800px;
+}
+
+/* #homepic {
     width: 50%;
     margin-top: 5%;
     margin-left: 25%;
     margin-right: 25%;
-} */
+} */ */
 
 
-
-/***/
 .divuserloginstyle{
     background-color: aqua;
 }
@@ -80,8 +83,7 @@ ul.routeList li:hover{
 
 .slider{
     margin: auto;
-	width: 1000px;
-    height: 600px;
+	width: 50%;
 }
  
 .img-box img{
@@ -104,5 +106,14 @@ ul.routeList li:hover{
 
 .btn:hover{
 	background: #111;
+}
+
+#welcomeBanner {
+    width: 50%;
+    text-align: center;
+    margin-left: 25%;
+    margin-right: 25%;
+    padding: 50px;
+    padding-top: 18px;
 }
 

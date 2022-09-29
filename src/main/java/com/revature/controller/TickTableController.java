@@ -2,6 +2,7 @@ package com.revature.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.revature.model.TickTable;
 import com.revature.service.TickTableService;
 
+//@CrossOrigin("http://127.0.0.1:5500/")
+@CrossOrigin("*")
 @RestController
 public class TickTableController {
 
