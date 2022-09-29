@@ -37,7 +37,7 @@ public class RouteController {
 	//Get all routes
 	@GetMapping("/api/v1/routes")
 	public List<Routes> getRoutes(){
-		return routeService.getRoutes();
+		return routeService.getListOfRoutes();
 	}
 	
 	//Get all routes at location

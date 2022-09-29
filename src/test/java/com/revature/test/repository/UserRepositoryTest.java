@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Configuration;
 
 import com.revature.model.Users;
 import com.revature.repository.UserRepository;
-
 
 @DataJpaTest
 public class UserRepositoryTest {
@@ -21,10 +21,10 @@ public class UserRepositoryTest {
 	@Autowired
 	private UserRepository underTest;
 	
-//	@AfterEach
-//	void tearDown() {
-//		underTest.deleteAll();
-//	}
+	@AfterEach
+	void tearDown() {
+		underTest.deleteAll();
+	}
 	
 	
 	@Test

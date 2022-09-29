@@ -52,19 +52,19 @@
    			 <scope>test</scope>
 		</dependency>
 		
-		 
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
-		</dependency>
-		    
+		</dependency> -->
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<!--  
+<<<<<<< HEAD
 		<dependency>
     		<groupId>com.h2database</groupId>
     		<artifactId>h2</artifactId>
@@ -72,12 +72,19 @@
 	</dependency>
 	-->
 		<!--  			
+=======
+	<dependency>
+    		<groupId>com.h2database</groupId>
+    		<artifactId>h2</artifactId>
+    		<scope>runtime</scope>
+	</dependency> -->
+					
+>>>>>>> 811c6854c45bc4f76f9aba8adba21bc99c4c612d
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>test</scope>
 		</dependency>
-		-->
 
 	<dependency>
 			<groupId>org.projectlombok</groupId>
