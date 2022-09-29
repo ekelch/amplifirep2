@@ -301,9 +301,6 @@ function renderGalerie(){
     selectionDiv.append(divImg);
     document.querySelector("body").appendChild(welcomeBanner);
     document.querySelector("body").appendChild(selectionDiv);
-    console.log("5");
-
-
 
 }
 
@@ -442,8 +439,14 @@ function renderUserHome(user){
     updateBtn.value = "Update User";
     updateBtn.addEventListener("click", function() {renderUserUpdate(user)});
 
-    userinfoDiv.append(userbanner, userpic, userDescription, userEmail, userZip, updateBtn);
+    let refreshBtn = document.createElement("input");
+    refreshBtn.type = "Button";
+    refreshBtn.value = "Refresh";
+    refreshBtn.addEventListener("click", function() {renderUserHome(user)});
+
+    userinfoDiv.append(refreshBtn, userbanner, userpic, userDescription, userEmail, userZip, updateBtn);
     document.querySelector("body").appendChild(userinfoDiv);
+    renderTickList(user);
 }
 
 async function renderRoutesByLocation(location) {
@@ -763,7 +766,70 @@ const renderRoute = async function(route) {
     updateBtn.addEventListener("click", function() {renderUpdateRoute(route)});
         
     document.querySelector("body").append(routeDiv, locationDiv, updateBtn);
+    
     renderWeather(route.location.latlong);
+}
+
+async function renderTickSearch(user){
+    let tickDiv = document.createElement("div");
+    let tickDescription = document.createElement("h3");
+    tickDescription.innerText = "Search a route by name to add it to your tick list!";
+    let tickSearch = document.createElement("input");
+    tickSearch.type = "text";
+    tickSearch.placeholder = "Search Route Name";
+    tickSearch.id = "NameSearch";
+    let searchBtn = document.createElement("input");
+    searchBtn.type = "Button";
+    searchBtn.value = "Tick Route"; 
+    searchBtn.addEventListener("click", function() {tickCompare(tickSearch.value, user)});
+    searchBtn.addEventListener("click", function() {console.log(tickSearch.value)});
+
+    //
+    tickDiv.append(tickDescription, tickSearch, searchBtn);
+    document.querySelector("body").append(tickDiv);
+}
+
+async function tickCompare(routeName, user){
+    let allRoutes = await getAllRoutes();
+    let compressRoutes = allRoutes;
+    let notFound = false;
+    let routeNotFound = document.createElement("h2");
+    routeNotFound.id = 'not';
+    for (let route of compressRoutes) {
+        route['name'] = route['name'].replaceAll(/[^a-zA-Z0-9]/g, "").toLowerCase();
+    }
+    let nameInput = document.querySelector("#NameSearch").value;
+    let inputCompress = nameInput.replaceAll(/[^a-zA-Z0-9]/g, "").toLowerCase();
+    for (let route of compressRoutes) {
+        if (route.name == inputCompress){
+            foundRoute(route, user);
+        } else {
+            notFound = true;
+        }
+    }
+    if (notFound){
+        routeNotFound.innerText = `Route match not found!, please try again
+        
+        `
+    }
+    if (document.querySelector('#not') == '')
+            document.querySelector("body").append(routeNotFound);
+}
+
+async function foundRoute(route, user) {
+    let actualRoute = await getRouteById(route.route_id)
+    let routeFound = document.createElement("h2");
+    routeFound.innerText = `Route ${actualRoute.name} found!`;
+    let ratingInfo = document.createElement("h2");
+    ratingInfo.innerText = 'Submit a rating to tick this route.';
+    let tickRating = document.createElement("input");
+    tickRating.type = "text";
+    tickRating.placeholder = "Rating";
+    let tickBtn = document.createElement("input");
+    tickBtn.type = "Button";
+    tickBtn.value = "Tick Route";
+    tickBtn.addEventListener("click", function() {postTick(actualRoute.route_id, user.user_id, parseInt(tickRating.value))});
+    document.querySelector("body").append(routeFound, ratingInfo, tickRating, tickBtn);
 }
 
 async function renderLocations() { //display list of locations
@@ -802,6 +868,59 @@ async function renderLocations() { //display list of locations
     }
     
     document.querySelector("body").appendChild(locationTable);
+}
+
+const renderTickList = async function(user){
+    let ticks = await getTicksByUserId(user.user_id);
+    let allRoutes = await getAllRoutes();
+
+    let tickContainer = document.createElement("div");
+    let tickBanner = document.createElement("h2");
+    tickBanner.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
+    tickBanner.innerText = "Tick List"
+    
+    let tickTable = document.createElement("table");
+    tickTable.id = "tickTable";
+    tickTable.classList.add("table", "table-striped");
+    tickTable.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded","w-50","mx-auto");
+    let tickHeader = document.createElement("tr");
+    let thName = document.createElement("th");
+    thName.innerText = "Route Name";
+    let thDifficulty = document.createElement("th");
+    thDifficulty.innerText = "Difficulty";
+    let thLocation = document.createElement("th");
+    thLocation.innerText = "Location";
+    tickHeader.append(thName, thDifficulty, thLocation);
+    tickTable.append(tickHeader);
+
+    for (let tick of ticks){
+        for (let route of allRoutes){
+            if (tick.routeId == route.route_id){
+                console.log(route.route_id);
+                let routeItem = document.createElement("tr");
+                let tdName = document.createElement("td");
+                tdName.innerText = route.name;
+                tdName.id = route.route_id;
+                let tdDifficulty = document.createElement("td");
+                tdDifficulty.innerText = route.difficulty;
+                let tdLocation = document.createElement("td");
+                tdLocation.innerText = route.location.locationName;
+                routeItem.append(tdName, tdDifficulty, tdLocation);
+                tickTable.append(routeItem);
+            }
+        }
+    }
+
+    tickTable.onclick = async function(event) {
+        routeId = event.target.id;
+        let route = await getRouteById(routeId);
+        renderRoute(route);
+    }
+
+    tickContainer.append(tickBanner, tickTable);
+    document.querySelector("body").append(tickContainer);
+
+    await renderTickSearch(user);
 }
 
 async function renderWeather(latlong) {
@@ -1000,6 +1119,50 @@ const updateRoute = async function(route){
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(route)
+            })
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+const getTicksByUserId = async function(id) {
+    const path = '/api/v1/activity/';
+    const url = urlBase + path + id;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+const postTick = async function(routeId, userId, rating){
+    const path = '/api/v1/activity';
+    const url = urlBase + path;
+
+    let postBody = {
+        userId: userId,
+        routeId: routeId,
+        rating: rating
+    }
+    console.log(postBody);
+    console.log(JSON.stringify(postBody));
+    try {
+        await fetch(
+            url,
+            {
+                method: "POST",
+                headers: new Headers({'content-type':'application/json'}),
+                body: JSON.stringify(postBody)
             })
 
     } catch (error) {
