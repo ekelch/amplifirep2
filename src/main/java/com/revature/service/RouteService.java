@@ -8,21 +8,25 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.revature.model.Locations;
 import com.revature.model.Routes;
 
 import com.revature.repository.RouteRepository;
+import com.revature.repository.LocationRepository;
+import com.revature.util.LocationNotFoundException;
 import com.revature.util.RouteNotFoundException;
 
 
 @Service
 public class RouteService {
 	
-	
+	private LocationRepository locationRepository;
 	private RouteRepository routeRepository;
 	
 	@Autowired
-	public RouteService(RouteRepository routeRepository) {
+	public RouteService(RouteRepository routeRepository, LocationRepository locationRepository) {
 		this.routeRepository = routeRepository;
+		this.locationRepository = locationRepository;
 	}
 	
 	public Routes getRoutes(Integer id) throws RouteNotFoundException{
@@ -35,11 +39,11 @@ public class RouteService {
 		}
 	}
 	
-	public List<Routes> getRoutesByLocationId(Integer locationId) {
+	public List<Routes> getRoutesByLocationId(Integer id) {
 		List<Routes> routes = routeRepository.findAll();
 		List<Routes> locationRoutes = new ArrayList<Routes>(); 
 		for (Routes route:routes) {
-			if (route.getLocation_id().getId().equals(locationId))
+			if (route.getLocation().getId().equals(id))
 				locationRoutes.add(route);
 		}
 		System.out.println(locationRoutes);
@@ -50,9 +54,15 @@ public class RouteService {
 		return routeRepository.findAll();
 	}
 
-	public Routes register(Routes route) throws RouteNotFoundException {
+	public Routes register(Routes route, Integer locationId) throws RouteNotFoundException, LocationNotFoundException {
 		Optional<Routes> existingRoute = routeRepository.findByName(route.getName());
 		if (existingRoute.isEmpty()) {
+			Optional<Locations> location = locationRepository.findById(locationId);
+			if (location.isPresent()) {
+				route.setLocation(location.get());
+			} else {
+				throw new LocationNotFoundException("Not a valid location id");
+			}
 			Routes newRoute = routeRepository.saveAndFlush(route);
 			return newRoute;
 		} else {

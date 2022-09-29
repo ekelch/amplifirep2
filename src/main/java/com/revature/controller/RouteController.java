@@ -47,9 +47,9 @@ public class RouteController {
 	}
 	
 	//Route Registration
-	@PostMapping("/api/v1/routes")
-	public Routes register(@RequestBody Routes route) throws RouteNotFoundException {
-		return routeService.register(route);
+	@PostMapping("/api/v1/routes/{locationId}")
+	public Routes register(@RequestBody Routes route, @PathVariable("locationId") Integer locationId) throws RouteNotFoundException, LocationNotFoundException {
+		return routeService.register(route, locationId);
 	}
 	
 	//Delete a route

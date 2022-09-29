@@ -1,7 +1,6 @@
 package com.revature.model;
 
 import javax.persistence.Column;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,5 +27,6 @@ public class Locations {
 	private Integer id;
 	private String locationName;
 	private String latlong;
-
 }
+
+

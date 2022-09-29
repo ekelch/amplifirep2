@@ -387,14 +387,16 @@ const searchByName = async function() {
     let inputCompress = nameInput.replaceAll(/[^a-zA-Z0-9]/g, "").toLowerCase();
     for (let route of compressRoutes) {
         if (route.name == inputCompress){
+            console.log(route);
             let actualRoute = await getRouteById(route.route_id)
             await renderRoute(actualRoute);
         }
     }
 }
 let bad = false;
-const renderAddRoute = function(location) {
+const renderAddRoute = async function(location) {
     derenderPage();
+    let locationId = location.id;
     let locationHeader = document.createElement("h2");
     locationHeader.innerText = `Submit a new route to ${location.locationName}`;
     let tryAgain = document.createElement('h3');
@@ -419,26 +421,23 @@ const renderAddRoute = function(location) {
     newRouteDiv.append(locationHeader, newRouteName, newRouteDifficulty, newRouteLength, newRoutePhotoUrl, submitButton);
     document.querySelector("body").append(newRouteDiv);
 
-    submitButton.onclick = function() {
+    submitButton.onclick = async function() {
         if (newRouteName.value != '' & newRouteDifficulty.value != '' & newRouteLength.value != '') { 
             newRoute = {
                 name: newRouteName.value,
-                location_id: location,
                 difficulty: newRouteDifficulty.value,
                 length: newRouteLength.value
             }
             if (newRoutePhotoUrl.value != ''){
                 newRoute.photo_url = newRoutePhotoUrl.value;
             }
-        let updatedRoute = postRoute(newRoute);
-        console.log(updatedRoute);
+        await postRoute(newRoute, location.id);
         } else {
             bad = true;
             renderAddRoute(location);
         }
-        console.log(newRoute);
     };
-
+    submitButton.addEventListener("click", async function() {renderRoutesByLocation(location)});
     
 }
 
@@ -473,7 +472,7 @@ const searchByDifficulty = async function() {
             tdName.innerText = route.name;
             tdName.id = route.route_id;
             let tdLocation = document.createElement("td");
-            tdLocation.innerText = route.location_id.locationName;
+            tdLocation.innerText = route.location.locationName;
             let tdDifficulty = document.createElement("td");
             tdDifficulty.innerText = route.difficulty;
             let tdLength = document.createElement("td");
@@ -517,14 +516,14 @@ const renderRoute = async function(route) {
     
     let locationDiv = document.createElement("div");
         let locationName = document.createElement("h2");
-        locationName.innerText = `Location: ${route.location_id.locationName}`;
+        locationName.innerText = `Location: ${route.location.locationName}`;
         let latlong = document.createElement("p");
-        latlong.innerText = `Latitude/Longitude: ${route.location_id.latlong}`;
+        latlong.innerText = `Latitude/Longitude: ${route.location.latlong}`;
 
     locationDiv.append(locationName, latlong);
         
     document.querySelector("body").append(routeDiv, locationDiv);
-    renderWeather(route.location_id.latlong);
+    renderWeather(route.location.latlong);
 }
 
 async function renderLocations() { //display list of locations
@@ -557,7 +556,6 @@ async function renderLocations() { //display list of locations
         locationTable.appendChild(locationItem);
     }
     locationTable.onclick = async function(event) {
-        console.log(event.target);
         let locationId = event.target.id;
         let location = await getLocationById(locationId);
         renderRoutesByLocation(location);
@@ -568,7 +566,6 @@ async function renderLocations() { //display list of locations
 
 async function renderWeather(latlong) {
     let weather = await getCurrentWeather(latlong);
-    console.log(weather);
 
     let weatherDiv = document.createElement("div");
     weatherDiv.classList.add("form-group","text-center","justify-content-center");
@@ -589,6 +586,10 @@ async function renderWeather(latlong) {
     let tempC = document.createElement("p");
     tempC.innerText = `Current Temperature (degrees Celsius): ${weather.current.temp_c}`;
     weatherDiv.appendChild(tempC);
+
+    let tempF = document.createElement("p");
+    tempF.innerText = `Current Temperature (degrees Fahrenheit): ${weather.current.temp_f}`;
+    weatherDiv.appendChild(tempF);
 
     let humidity = document.createElement("p");
     humidity.innerText = `Current Relative Humidity: ${weather.current.humidity}%`;
@@ -674,9 +675,9 @@ const getRouteById = async function(id) {
     }
 }
 
-const postRoute = async function(route){
-    const path = '/api/v1/routes';
-    const url = urlBase + path;
+const postRoute = async function(route, locationId){
+    const path = '/api/v1/routes/';
+    const url = urlBase + path + locationId;
     try {
         let response = await fetch(
             url,
@@ -705,7 +706,6 @@ async function getRoutesByLocation(id) {
                 body: null
             })
             let data = await response.json();
-            console.log(data);
             return data;
 
     } catch (error) {
