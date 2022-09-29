@@ -4,19 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 
-import static org.mockito.ArgumentMatchers.anyString;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.*;
-
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -64,7 +59,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	void CanGetAllUsers() {
+	void CanGetListOfUsers() {
 		// when
 		underTest.getAllUsers();
 		// then
@@ -72,7 +67,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	void CanDoLogin() throws UserNotFoundException {
+	void CanDoLoginByUsernameAndPassword() throws UserNotFoundException {
 		//given
 		given(userRepository.findByUsernameAndPassword("user1", "pass1")).willReturn(Optional.of(user));
 		//when
@@ -83,7 +78,7 @@ public class UserServiceTest {
 	}
 	
 	@Test
-	void CanGetUser() throws UserNotFoundException {
+	void CanGetUserById() throws UserNotFoundException {
 		// given
 		given(userRepository.findById(1)).willReturn(Optional.of(user));
 		// when
@@ -97,6 +92,7 @@ public class UserServiceTest {
 	@Test
 	void CanUpdateUser() throws UserNotFoundException {
 		// given
+		given(userRepository.findById(1)).willReturn(Optional.of(user));
 		given(userRepository.save(user)).willReturn(user);
 		user.setPassword("pass2");
 		user.setDescription("i love sw");
@@ -114,8 +110,7 @@ public class UserServiceTest {
 	@Test
 	void CanDeleteUser() throws UserNotFoundException {
 		//when
-		underTest.deleteUser(user.getUser_id());
-		verify(userRepository, times(1)).deleteById(user.getUser_id());
-		assertThat(user).isNull();
+		underTest.deleteUser(1);
+		verify(userRepository, times(1)).deleteById(1);
 	}
 }

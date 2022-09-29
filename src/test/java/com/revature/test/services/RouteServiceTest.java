@@ -11,11 +11,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.revature.model.Locations;
 import com.revature.model.Routes;
+import com.revature.model.Users;
 import com.revature.repository.LocationRepository;
 import com.revature.repository.RouteRepository;
 import com.revature.service.RouteService;
 import com.revature.util.LocationNotFoundException;
 import com.revature.util.RouteNotFoundException;
+import com.sun.jdi.Location;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -89,29 +91,33 @@ public class RouteServiceTest {
 	@Test
 	void canRegisterRoute() throws RouteNotFoundException, LocationNotFoundException {
 		// given
-		given(routeRepository.findByName(route.getName())).willReturn(Optional.of(route));
+		given(routeRepository.findByName("Open Mouths")).willReturn(Optional.empty());
 		given(locationRepository.findById(location.getId())).willReturn(Optional.of(location));
 		//when
-		Routes expected = underTest.register(route, route.getRoute_id());
-		assertThat(expected).isNotNull();
+		underTest.register(route, location.getId());
 		//then
 		verify(routeRepository,times(1)).findByName("Open Mouths");
-		verify(locationRepository,times(1)).findById(1);
+		verify(locationRepository,times(1)).findById(location.getId());
+		ArgumentCaptor<Routes> userArgumentCaptor = ArgumentCaptor.forClass(Routes.class);
+		verify(routeRepository).saveAndFlush(userArgumentCaptor.capture());
+		
+		Routes capturedRoutes = userArgumentCaptor.getValue();
+		assertThat(capturedRoutes).isNotNull();
 	}
 	
 	@Test
 	void canDeleteRoute() throws RouteNotFoundException {
 		//given
 		underTest.deleteRoute(route.getRoute_id());
-		//when
-		verify(routeRepository,times(1)).deleteById(1);
 		//then
-		assertThat(route).isNull();
+		verify(routeRepository,times(1)).deleteById(1);
+
 	}
 	
 	@Test
 	void canUpdateRoute() throws RouteNotFoundException {
 		//given
+		given(routeRepository.findById(1)).willReturn(Optional.of(route));
 		given(routeRepository.save(route)).willReturn(route);
 		route.setDifficulty("11b");
 		route.setLength(99);
