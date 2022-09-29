@@ -16,7 +16,5 @@ public class Authentification {
 				.sign(algorithm);
 		return accessToken;
 	}
-	
-
 }
 

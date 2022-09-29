@@ -2,7 +2,6 @@ package com.revature.controller;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,11 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.model.Routes;
-
 import com.revature.service.RouteService;
 import com.revature.util.LocationNotFoundException;
 import com.revature.util.RouteNotFoundException;
@@ -27,8 +24,7 @@ public class RouteController {
 	private RouteService routeService;
 
 	@Autowired
-	public RouteController(RouteService routeService) {
-		super();
+	public RouteController(RouteService routeService) { 
 		this.routeService = routeService;
 	}
 	
@@ -44,12 +40,6 @@ public class RouteController {
 		return routeService.getRoutes();
 	}
 	
-	//Get all routes with no spaces or special characters in name
-		@GetMapping("/api/v1/routescompress")
-		public List<Routes> getRoutesCompressed(){
-			return routeService.getRoutesCompressed();
-		}
-	
 	//Get all routes at location
 	@GetMapping("/api/v1/routesByLocationId/{id}")
 	public List<Routes> getRoutesByLocationId(@PathVariable("id") Integer id) throws LocationNotFoundException {
@@ -58,7 +48,7 @@ public class RouteController {
 	
 	//Route Registration
 	@PostMapping("/api/v1/routes")
-	public Routes register(@RequestBody Routes route) {
+	public Routes register(@RequestBody Routes route) throws RouteNotFoundException {
 		return routeService.register(route);
 	}
 	

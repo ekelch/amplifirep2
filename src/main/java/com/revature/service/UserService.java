@@ -30,7 +30,7 @@ public class UserService {
 		return userRepository.saveAndFlush(user);
 	}
 
-	public List<Users> getUsers(){
+	public List<Users> getAllUsers(){
 		return userRepository.findAll();
 
 	}
@@ -39,6 +39,7 @@ public class UserService {
 	public Users login(Users user) throws UserNotFoundException {
 		Optional<Users> existUser = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
 		if(existUser.isPresent()) {
+
 			
 			Users actualUser = existUser.get();
 			return new Users(
@@ -49,8 +50,7 @@ public class UserService {
 					actualUser.getDescription(),
 					actualUser.getZipcode(),
 					actualUser.getPhoto_url());
-					
-
+			
 		} else {
 			throw new UserNotFoundException("User Not Found");
 		}
@@ -73,6 +73,7 @@ public class UserService {
 		updateUser.setPassword(user.getPassword());
 		updateUser.setDescription(user.getDescription());
 		updateUser.setZipcode(user.getZipcode());
+		updateUser.setPhoto_url(user.getPhoto_url());
 		
 		userRepository.save(updateUser);
 	}

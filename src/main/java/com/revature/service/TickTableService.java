@@ -66,8 +66,5 @@ public class TickTableService {
 		List<TickTable> oneAct= this.getListByUserIdAndRouteId(userId, routeId);
 		tickTableRepository.deleteAll(oneAct);
 	}
-	
-	
-
 }
 

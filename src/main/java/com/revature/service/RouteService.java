@@ -22,7 +22,6 @@ public class RouteService {
 	
 	@Autowired
 	public RouteService(RouteRepository routeRepository) {
-		super();
 		this.routeRepository = routeRepository;
 	}
 	
@@ -38,27 +37,27 @@ public class RouteService {
 	
 	public List<Routes> getRoutesByLocationId(Integer locationId) {
 		List<Routes> routes = routeRepository.findAll();
-		List<Routes> locationRoutes = new ArrayList<Routes>(); // I do not know what type of list this should be.. -Evan
+		List<Routes> locationRoutes = new ArrayList<Routes>(); 
 		for (Routes route:routes) {
 			if (route.getLocation_id().getId().equals(locationId))
 				locationRoutes.add(route);
 		}
+		System.out.println(locationRoutes);
 		return locationRoutes;
-	}
-	
-	public List <Routes> getRoutesCompressed(){
-		List<Routes> routes = routeRepository.findAll();
-		for (Routes route:routes)
-			route.setName(route.getName().replaceAll("[^a-zA-Z0-9]", "").toLowerCase());
-		return routes;
 	}
 	
 	public List <Routes> getRoutes(){
 		return routeRepository.findAll();
 	}
 
-	public Routes register(Routes route) {
-		return routeRepository.saveAndFlush(route);
+	public Routes register(Routes route) throws RouteNotFoundException {
+		Optional<Routes> existingRoute = routeRepository.findByName(route.getName());
+		if (existingRoute.isEmpty()) {
+			Routes newRoute = routeRepository.saveAndFlush(route);
+			return newRoute;
+		} else {
+			throw new RouteNotFoundException("Duplicate route entry");
+		}
 	}
 	
 	public void deleteRoute(Integer id) throws RouteNotFoundException {
@@ -71,6 +70,7 @@ public class RouteService {
 		updateRoute.setDifficulty(route.getDifficulty());
 		updateRoute.setLength(route.getLength());
 		updateRoute.setName(route.getName());
+		updateRoute.setPhoto_url(route.getPhoto_url());
 		
 		routeRepository.save(updateRoute);
 	}
