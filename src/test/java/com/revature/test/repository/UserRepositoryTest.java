@@ -40,7 +40,6 @@ public class UserRepositoryTest {
 				"https://dl.dropboxusercontent.com/s/av08po3cupbll0g/chrome_Qtl2u3xBZy.jpg"
 				);
 		underTest.save(user);
-		
 		//when
 		Users result=underTest.findByUsernameAndPassword("user1", "pass1").get();
 		

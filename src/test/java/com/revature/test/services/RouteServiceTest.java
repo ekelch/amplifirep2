@@ -4,31 +4,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 
-import static org.mockito.ArgumentMatchers.anyString;
+
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.revature.model.Locations;
 import com.revature.model.Routes;
-import com.revature.model.Users;
 import com.revature.repository.LocationRepository;
 import com.revature.repository.RouteRepository;
 import com.revature.service.RouteService;
 import com.revature.util.LocationNotFoundException;
 import com.revature.util.RouteNotFoundException;
-import com.sun.jdi.Location;
-
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.*;
-
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

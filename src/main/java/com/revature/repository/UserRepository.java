@@ -12,7 +12,6 @@ import com.revature.model.Users;
 @Repository
 public interface UserRepository extends JpaRepository<Users, Integer>{
 
-	List<Users> findAll();
 	
 	Optional<Users> findByUsernameAndPassword(String username, String password);
 }

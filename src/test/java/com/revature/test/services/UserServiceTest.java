@@ -49,7 +49,6 @@ public class UserServiceTest {
 	void CanRegister() {
 		// when
 		underTest.register(user);
-		
 		// then
 		ArgumentCaptor<Users> userArgumentCaptor = ArgumentCaptor.forClass(Users.class);
 		verify(userRepository).saveAndFlush(userArgumentCaptor.capture());
