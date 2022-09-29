@@ -14,8 +14,11 @@ function renderNav() {
         navHome.innerText = "Home";
         navHome.addEventListener("click", renderHome);
     let navUsers = document.createElement("LI");
-        navUsers.innerText = "Users";
+        navUsers.innerText = "Login";
         navUsers.addEventListener("click", renderLogin);
+    let navRegister = document.createElement("LI");
+        navRegister.innerText = "Register";
+        navRegister.addEventListener("click", renderPostUser);
     let navLocations = document.createElement("LI");
         navLocations.innerText = "Locations";
         navLocations.addEventListener("click", renderLocations);
@@ -23,13 +26,126 @@ function renderNav() {
         navSearch.innerText = "Search";
         navSearch.addEventListener("click", renderSearchHome);
 
-    navList.append(navHome, navUsers, navLocations, navSearch);
+    navList.append(navHome, navUsers,navRegister, navLocations, navSearch);
 
     navigation.appendChild(navList);
     document.querySelector("body").appendChild(navigation);
     document.body.classList.add("bg-light");
+}
 
-   
+function renderPostUser(){
+    derenderPage();
+    let userPosetContainer = document.createElement("div");
+    userPosetContainer.id = "userPost";
+    userPosetContainer.className = "bannerUserPost";
+
+    userPosetContainer.classList.add("form-group","text-center","justify-content-center");
+    userPosetContainer.classList.add("justify-content-center","text-center","shadow", "bg-white", "rounded","w-50","mx-auto");
+
+
+    let registerLabel = document.createElement("h2"); 
+    registerLabel.innerText = "Register a New User";
+    userPosetContainer.appendChild(registerLabel);
+    registerLabel.classList.add("col-xs-2","w-50","mx-auto");
+
+    let usernameLabel = document.createElement("h5");        // create username static label "Username"
+    usernameLabel.innerText = "User Name :";
+    userPosetContainer.appendChild(usernameLabel);
+
+    let usernameInput = document.createElement("input");    // create username input variable "user1"
+    usernameInput.id = "username";
+    usernameInput.type = "text";
+    usernameInput.placeholder = "username";
+    userPosetContainer.appendChild(usernameInput);
+    usernameInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
+
+    let passwordLabel = document.createElement("h5");        // create password static label "Password"
+    passwordLabel.innerText = "Password";
+    userPosetContainer.appendChild(passwordLabel);
+
+    let passwordInput = document.createElement("input");    // create password input variable "pass1"
+    passwordInput.type = "password";
+    passwordInput.id = "password";
+    passwordInput.placeholder = "password";
+    userPosetContainer.appendChild(passwordInput);
+    passwordInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
+    
+    userPosetContainer.appendChild(document.createElement("br"));
+
+    let emailLabel = document.createElement("h5");        // create email  label
+    emailLabel.innerText = " email";
+    userPosetContainer.appendChild(emailLabel);
+
+    let emailInput = document.createElement("input");    // create email input variable 
+    emailInput.type = "text";
+    emailInput.id = "email";
+    emailInput.placeholder = "email";
+    userPosetContainer.appendChild(emailInput);
+    emailInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
+
+    let descriptionLabel = document.createElement("h5");        // create description  label 
+    descriptionLabel.innerText = "description";
+    userPosetContainer.appendChild(emailLabel);
+
+    let descriptionInput = document.createElement("input");    // create description input variable 
+    descriptionInput.type = "text";
+    descriptionInput.id = "description";
+    descriptionInput.placeholder = "description";
+    userPosetContainer.appendChild(descriptionInput);
+    descriptionInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
+
+    let zipcodeLabel = document.createElement("h5");        // create zipcode  label "
+    zipcodeLabel.innerText = "zip code";
+    userPosetContainer.appendChild(zipcodeLabel);
+
+    let zipcodeInput = document.createElement("input");    // create zipcode input variable
+    zipcodeInput.type = "text";
+    zipcodeInput.id = "zipcode";
+    zipcodeInput.placeholder = "zip code";
+    userPosetContainer.appendChild(zipcodeInput);
+    zipcodeInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
+
+    let photourlLabel = document.createElement("h5");        // create photourl  label "Password"
+    photourlLabel.innerText = "Photo URL :";
+    userPosetContainer.appendChild(photourlLabel);
+
+    let photourlInput = document.createElement("input");    // create photourl input variable 
+    photourlInput.type = "text";
+    photourlInput.id = "photourl";
+    photourlInput.placeholder = "Photo URL";
+    userPosetContainer.appendChild(photourlInput);
+    photourlInput.classList.add("form-control","col-xs-2","w-25","mx-auto");
+
+    let submitButton = document.createElement("input");     // create submit button, goes to asyncLogin
+    submitButton.type = "button";
+    submitButton.value = "Register";
+    //submitButton.addEventListener("click", postUser);
+    submitButton.classList.add("btn", "btn-primary","w-25","mx-auto","text-center");
+    userPosetContainer.appendChild(submitButton);
+    
+    submitButton.onclick = async function() {
+        let newUser;
+        if (usernameInput.value != '' & passwordInput.value != '' & emailInput.value != '' & descriptionInput.value != '' & zipcodeInput.value != '') { 
+            newUser = {
+                username: usernameInput.value,
+                password: passwordInput.value,
+                email: emailInput.value,
+                description: descriptionInput.value,
+                zipcode: zipcodeInput.value,
+                photourl: photourlInput.value
+            }
+           // console.log(newUser);
+        await postUser(newUser);
+        renderLogin();
+        } else{ 
+            renderPostUser();
+        }
+    }
+    document.querySelector("body").appendChild(userPosetContainer);
+}
+
+function logout(){
+    renderHome();
 }
 
 function renderLogin(){
@@ -83,7 +199,6 @@ function renderLogin(){
     loginContainer.appendChild(resetButton);
 
     document.querySelector("body").appendChild(loginContainer); // adds login container to html body, below nav bar
-    
 }
 
 function derenderPage(){
@@ -91,7 +206,6 @@ function derenderPage(){
     renderNav();
     //renderGalerie();
 }
-
 async function asyncLogin(){
     let userInput = document.querySelector("#username").value;
     let passInput = document.querySelector("#password").value;
@@ -726,6 +840,26 @@ const getRouteById = async function(id) {
     } catch (error) {
         console.error(`Error is ${error}`)
     }
+}
+
+const postUser = async function(user){
+    const path = '/api/v1/users/';
+    const url = urlBase + path;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "POST",
+                headers: new Headers({'content-type':'application/json'}),
+                body: JSON.stringify(user)
+            })
+            let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+
 }
 
 const postRoute = async function(route, locationId){
