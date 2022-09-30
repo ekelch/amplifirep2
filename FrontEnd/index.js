@@ -250,10 +250,10 @@ function renderHome() {
 }
 function renderGalerie(){
 
-    let welcomeBanner = document.createElement("h1");
+    let welcomeBanner = document.createElement("h2");
     welcomeBanner.id = 'welcomeBanner';
     welcomeBanner.innerText = "Welcome to Mountain Project Lite!";
-
+    welcomeBanner.classList.add("shadow-lg","col-xs-2","w-50","mx-auto");
     let images = [
         'https://dl.dropboxusercontent.com/s/z6mizq6hfjqk0c0/amarilloParadise-084.jpg',
         'https://dl.dropboxusercontent.com/s/njj3ux6by318d3j/IMG_4344.jpg',
@@ -353,17 +353,21 @@ function renderUserUpdate(user) {
     userZip.innerText = 'Zipcode';
     updateOptionList.append(userPass, userPic, userDescription, userZip);
     updateDiv.appendChild(updateOptionList);
+    updateDiv.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded","text-center");
     
     updateOptionList.onclick = async function(event) {
         if (event.target.innerText == 'Password') {
             derenderPage();
             let updateType = document.createElement("h3");
             updateType.innerText = "Update your Password:";
+            updateType.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded","text-center");
             let updateInput = document.createElement("input");
             updateInput.placeholder = 'New Password';
+            updateInput.classList.add("form-control","col-xs-2","w-25");
             let updateBtn = document.createElement("input");
             updateBtn.type = "Button";
             updateBtn.value = "Submit";
+            updateBtn.classList.add("btn", "btn-info","mx-auto");
             updateBtn.addEventListener("click", function() {user['password'] = updateInput.value;})
             updateBtn.addEventListener("click", function() {updateUser(user)})
             updateBtn.addEventListener("click", function() {renderUserHome(user)})
@@ -374,11 +378,14 @@ function renderUserUpdate(user) {
             derenderPage();
             let updateType = document.createElement("h3");
             updateType.innerText = "Enter your new photo URL:";
+            updateType.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded","text-center");
             let updateInput = document.createElement("input");
             updateInput.placeholder = 'New URL';
+            updateInput.classList.add("form-control","col-xs-2","w-25");
             let updateBtn = document.createElement("input");
             updateBtn.type = "Button";
             updateBtn.value = "Submit";
+            updateBtn.classList.add("btn", "btn-info","mx-auto");
             updateBtn.addEventListener("click", function() {user['photo_url'] = updateInput.value;})
             updateBtn.addEventListener("click", function() {updateUser(user)})
             updateBtn.addEventListener("click", function() {renderUserHome(user)})
@@ -389,11 +396,14 @@ function renderUserUpdate(user) {
             derenderPage();
             let updateType = document.createElement("h3");
             updateType.innerText = "Enter your new Zipcode:";
+            updateType.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded","text-center");
             let updateInput = document.createElement("input");
             updateInput.placeholder = 'New Zipcode';
+            updateInput.classList.add("form-control","col-xs-2","w-25");
             let updateBtn = document.createElement("input");
             updateBtn.type = "Button";
             updateBtn.value = "Submit";
+            updateBtn.classList.add("btn", "btn-info","mx-auto");
             updateBtn.addEventListener("click", function() {user['zipcode'] = updateInput.value;})
             updateBtn.addEventListener("click", function() {updateUser(user)})
             updateBtn.addEventListener("click", function() {renderUserHome(user)})
@@ -404,11 +414,14 @@ function renderUserUpdate(user) {
             derenderPage();
             let updateType = document.createElement("h3");
             updateType.innerText = "Enter your user description:";
+            updateType.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded","text-center");
             let updateInput = document.createElement("input");
             updateInput.placeholder = 'New bio';
+            updateInput.classList.add("form-control","col-xs-2","w-25");
             let updateBtn = document.createElement("input");
             updateBtn.type = "Button";
             updateBtn.value = "Submit";
+            updateBtn.classList.add("btn", "btn-info","mx-auto");
             updateBtn.addEventListener("click", function() {user['description'] = updateInput.value;})
             updateBtn.addEventListener("click", function() {updateUser(user)})
             updateBtn.addEventListener("click", function() {renderUserHome(user)})
@@ -429,19 +442,21 @@ function renderUserHome(user){
     userinfoDiv.classList.add("text-center");
 
     //div for colimg and coltext
+    let containerDiv = document.createElement("div");
+    containerDiv.classList.add("container-fluid");
     let userpictextDiv = document.createElement("div");
-    //userpictextDiv.classList.add("raw");
+    userpictextDiv.classList.add("row");
     //div img or colimg
     let userpicDiv = document.createElement("div");
     let userpic = document.createElement("img");
     userpic.id = "userpic";
     userpic.src = user.photo_url;
     userpicDiv.appendChild(userpic);
-    userpicDiv.classList.add("d-inline-block")
-    //userpicDiv.classList.add("col-md-6");
-    userpic.classList.add("shadow-lg", "p-3", "mb-5", "bg-white","w-30","h-30");
+    //userpicDiv.classList.add("d-inline-block")
+    userpic.classList.add("h-50","w-50");
+    userpicDiv.classList.add("shadow-lg", "p-6", "mb-5", "bg-white","w-50","h-50","col-md-6");
     userpictextDiv.appendChild(userpicDiv);
-
+    
     //div text or coltext
     let usertextinfoDiv = document.createElement("div");
     let userDescription = document.createElement("p");
@@ -453,24 +468,28 @@ function renderUserHome(user){
     let userEmail = document.createElement("p");
     userEmail.innerText = 'Email: ' + user.email;
     usertextinfoDiv.appendChild(userEmail);
-    usertextinfoDiv.classList.add("d-inline-block","shadow-lg", "p-3", "mb-5", "bg-white", "rounded")
-    //usertextinfoDiv.classList.add("col-md-6");
-    userpictextDiv.appendChild(usertextinfoDiv);
+    usertextinfoDiv.classList.add("col-md-6","shadow-lg", "p-6", "mb-5", "bg-white", "rounded");
+    //usertextinfoDiv.classList.add("col-xs-6");
 
     let updateBtn = document.createElement("input");
     updateBtn.type = "Button";
     updateBtn.value = "Update User";
     updateBtn.classList.add("btn", "btn-info");
     usertextinfoDiv.appendChild(updateBtn);
+    userpictextDiv.appendChild(usertextinfoDiv);
     updateBtn.addEventListener("click", function() {renderUserUpdate(user)});
+
+    containerDiv.appendChild(userpictextDiv);
 
     let refreshBtn = document.createElement("input");
     refreshBtn.type = "Button";
     refreshBtn.value = "Refresh";
+    refreshBtn.classList.add("btn","btn-info")
     refreshBtn.addEventListener("click", function() {renderUserHome(user)});
 
-    userinfoDiv.append(refreshBtn, userbanner, userpic, userDescription, userEmail, userZip, updateBtn);
+    userinfoDiv.append(refreshBtn, userbanner,containerDiv);
     document.querySelector("body").appendChild(userinfoDiv);
+
     renderTickList(user);
 }
 
@@ -582,24 +601,32 @@ const renderAddRoute = async function(location) {
     let locationId = location.id;
     let locationHeader = document.createElement("h2");
     locationHeader.innerText = `Submit a new route to ${location.locationName}`;
+    locationHeader.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
     let tryAgain = document.createElement('h3');
     tryAgain.innerText = "Please enter all required fields and submit again.";
+    tryAgain.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
     if (bad){
         document.querySelector("body").append(tryAgain);
     }
     let newRoute;
     let newRouteDiv = document.createElement("div");
+    newRouteDiv.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
     let newRouteName = document.createElement("input");
     newRouteName.placeholder = "Route Name";
+    newRouteName.classList.add("form-control","col-xs-2","w-50","mx-auto");
     let newRouteDifficulty = document.createElement("input");
     newRouteDifficulty.placeholder = "Difficulty";
+    newRouteDifficulty.classList.add("form-control","col-xs-2","w-50","mx-auto");
     let newRouteLength = document.createElement("input");
     newRouteLength.placeholder = "Length (feet)";
+    newRouteLength.classList.add("form-control","col-xs-2","w-50","mx-auto");
     let newRoutePhotoUrl = document.createElement("input");
     newRoutePhotoUrl.placeholder = "Photo URL (Optional)";
+    newRoutePhotoUrl.classList.add("form-control","col-xs-2","w-50","mx-auto");
     let submitButton = document.createElement("input");
     submitButton.type = "Button";
     submitButton.value = "Submit New Route";
+    submitButton.classList.add("btn", "btn-primary");
 
     newRouteDiv.append(locationHeader, newRouteName, newRouteDifficulty, newRouteLength, newRoutePhotoUrl, submitButton);
     document.querySelector("body").append(newRouteDiv);
@@ -627,8 +654,10 @@ const renderAddRoute = async function(location) {
 const renderUpdateRoute = async function(route) {
     derenderPage();
     let updateDiv = document.createElement("div");
+    updateDiv.classList.add("text-center");
     let updateBanner = document.createElement("h2");
     updateBanner.innerText = 'What information would you like to update?';
+    updateBanner.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
     let updateOptionList = document.createElement("ul");
     let routeName = document.createElement("li");
     routeName.innerText = 'Route Name';
@@ -646,11 +675,14 @@ const renderUpdateRoute = async function(route) {
             derenderPage();
             let updateType = document.createElement("h3");
             updateType.innerText = "Update route name:";
+            updateType.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
             let updateInput = document.createElement("input");
             updateInput.placeholder = 'New Route Name';
+            updateInput.classList.add("form-control","col-xs-2","w-50","mx-auto");
             let updateBtn = document.createElement("input");
             updateBtn.type = "Button";
             updateBtn.value = "Submit";
+            updateBtn.classList.add("btn", "btn-primary");
             updateBtn.addEventListener("click", function() {route['name'] = updateInput.value;})
             updateBtn.addEventListener("click", function() {updateRoute(route)})
             updateBtn.addEventListener("click", function() {renderRoute(route)})
@@ -661,11 +693,14 @@ const renderUpdateRoute = async function(route) {
             derenderPage();
             let updateType = document.createElement("h3");
             updateType.innerText = "Enter your new photo URL:";
+            updateType.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
             let updateInput = document.createElement("input");
             updateInput.placeholder = 'New URL';
+            updateInput.classList.add("form-control","col-xs-2","w-50","mx-auto");
             let updateBtn = document.createElement("input");
             updateBtn.type = "Button";
             updateBtn.value = "Submit";
+            updateBtn.classList.add("btn", "btn-primary");
             updateBtn.addEventListener("click", function() {route['photo_url'] = updateInput.value;})
             updateBtn.addEventListener("click", function() {updateRoute(route)})
             updateBtn.addEventListener("click", function() {renderRoute(route)})
@@ -676,11 +711,14 @@ const renderUpdateRoute = async function(route) {
             derenderPage();
             let updateType = document.createElement("h3");
             updateType.innerText = "Enter new route length:";
+            updateType.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
             let updateInput = document.createElement("input");
             updateInput.placeholder = 'Length (feet)';
+            updateInput.classList.add("form-control","col-xs-2","w-50","mx-auto");
             let updateBtn = document.createElement("input");
             updateBtn.type = "Button";
             updateBtn.value = "Submit";
+            updateBtn.classList.add("btn", "btn-primary");
             updateBtn.addEventListener("click", function() {route['length'] = updateInput.value;})
             updateBtn.addEventListener("click", function() {updateRoute(route)})
             updateBtn.addEventListener("click", function() {renderRoute(route)})
@@ -691,11 +729,14 @@ const renderUpdateRoute = async function(route) {
             derenderPage();
             let updateType = document.createElement("h3");
             updateType.innerText = "Enter your route difficulty:";
+            updateType.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
             let updateInput = document.createElement("input");
             updateInput.placeholder = 'New Difficulty';
+            updateInput.classList.add("form-control","col-xs-2","w-50","mx-auto");
             let updateBtn = document.createElement("input");
             updateBtn.type = "Button";
             updateBtn.value = "Submit";
+            updateBtn.classList.add("btn", "btn-primary");
             updateBtn.addEventListener("click", function() {route['difficulty'] = updateInput.value;})
             updateBtn.addEventListener("click", function() {updateRoute(route)})
             updateBtn.addEventListener("click", function() {renderRoute(route)})
@@ -751,6 +792,7 @@ const searchByDifficulty = async function() {
 
     let diffDisplay = document.createElement("h2");
     diffDisplay.innerText = `Routes of difficulty: ${diffInput}`;
+    diffDisplay.classList.add("shadow-lg", "p-3", "mb-5", "bg-white"); 
     document.querySelector("body").append(routeTable);
 }
 
@@ -758,9 +800,11 @@ const renderRoute = async function(route) {
     derenderPage();
     console.log(route);
     let routeDiv = document.createElement("div");
+    routeDiv.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded","text-center");
         routeDiv.classList.add("d-inline-block");
         let routeHeader = document.createElement("h2");
         routeHeader.innerText = `${route.name}`;
+        routeHeader.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
         let routeImage = document.createElement("img");
         routeImage.classList.add("shadow-lg", "p-3", "mb-5", "bg-white","w-30","h-30");
         routeImage.id = "routeImage";
@@ -777,16 +821,19 @@ const renderRoute = async function(route) {
     routeDiv.append(routeDifficulty, routeLength);
     
     let locationDiv = document.createElement("div");
+    locationDiv.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded","text-center");
         let locationName = document.createElement("h2");
         locationName.innerText = `Location: ${route.location.locationName}`;
+        locationName.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
         let latlong = document.createElement("p");
         latlong.innerText = `Latitude/Longitude: ${route.location.latlong}`;
 
     locationDiv.append(locationName, latlong);
-
     let updateBtn = document.createElement("input");
     updateBtn.type = "Button";
     updateBtn.value = "Update Route";
+    updateBtn.classList.add("btn", "btn-info");
+
     updateBtn.addEventListener("click", function() {renderUpdateRoute(route)});
         
     document.querySelector("body").append(routeDiv, locationDiv, updateBtn);
@@ -796,15 +843,19 @@ const renderRoute = async function(route) {
 
 async function renderTickSearch(user){
     let tickDiv = document.createElement("div");
+    tickDiv.classList.add("text-center");
     let tickDescription = document.createElement("h3");
     tickDescription.innerText = "Search a route by name to add it to your tick list!";
+    tickDescription.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
     let tickSearch = document.createElement("input");
     tickSearch.type = "text";
     tickSearch.placeholder = "Search Route Name";
     tickSearch.id = "NameSearch";
+    tickSearch.classList.add("form-control","col-xs-2","w-50","mx-auto");
     let searchBtn = document.createElement("input");
     searchBtn.type = "Button";
     searchBtn.value = "Tick Route"; 
+    searchBtn.classList.add("btn", "btn-primary");
     searchBtn.addEventListener("click", function() {tickCompare(tickSearch.value, user)});
 
     //
@@ -842,15 +893,19 @@ async function tickCompare(routeName, user){
 async function foundRoute(route, user) {
     let actualRoute = await getRouteById(route.route_id)
     let routeFound = document.createElement("h2");
+    routeFound.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
     routeFound.innerText = `Route ${actualRoute.name} found!`;
     let ratingInfo = document.createElement("h2");
     ratingInfo.innerText = 'Submit a rating to tick this route.';
+    ratingInfo.classList.add("shadow-lg", "p-3", "mb-5", "bg-white", "rounded");
     let tickRating = document.createElement("input");
     tickRating.type = "text";
     tickRating.placeholder = "Rating";
+    tickRating.classList.add("form-control","col-xs-2","w-25");
     let tickBtn = document.createElement("input");
     tickBtn.type = "Button";
     tickBtn.value = "Tick Route";
+    tickBtn.classList.add("btn", "btn-primary")
     tickBtn.addEventListener("click", function() {postTick(actualRoute.route_id, user.user_id, parseInt(tickRating.value))});
     document.querySelector("body").append(routeFound, ratingInfo, tickRating, tickBtn);
 }
