@@ -235,13 +235,15 @@ async function asyncLogin(){
                 body: JSON.stringify(loginObj)}
         )
         user = await response.json();
+        console.log(user)
     }catch(error){
         console.error(`Error is ${error}`);
-    }
-    if (user.status != 500)
-        renderUserHome(user);
-    else
         alert("Not a valid login. Please try again.")
+    }
+    if (user.message == "User Not Found")
+        alert("Not a valid login. Please try again.")
+    else
+        renderUserHome(user);
 }
 
 function renderHome() {
