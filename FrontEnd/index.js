@@ -33,7 +33,7 @@ function renderNav() {
     document.body.classList.add("bg-light");
 }
 
-function renderPostUser(){
+async function renderPostUser(){
     derenderPage();
     let userPosetContainer = document.createElement("div");
     userPosetContainer.id = "userPost";
@@ -123,9 +123,18 @@ function renderPostUser(){
     submitButton.classList.add("btn", "btn-primary","w-25","mx-auto","text-center");
     userPosetContainer.appendChild(submitButton);
     
+    let allUsers = await getAllUsers();
+
     submitButton.onclick = async function() {
         let newUser;
-        if (usernameInput.value != '' & passwordInput.value != '' & emailInput.value != '') { 
+        
+        let notExisting = true;
+        for (let user of allUsers){
+            if (user.username == usernameInput.value)
+                notExisting = false;
+        }
+
+        if (notExisting & usernameInput.value != '' & passwordInput.value != '' & emailInput.value != '') { 
             newUser = {
                 username: usernameInput.value,
                 password: passwordInput.value,
@@ -229,7 +238,10 @@ async function asyncLogin(){
     }catch(error){
         console.error(`Error is ${error}`);
     }
-    renderUserHome(user);
+    if (user.status != 500)
+        renderUserHome(user);
+    else
+        alert("Not a valid login. Please try again.")
 }
 
 function renderHome() {
@@ -427,7 +439,7 @@ function renderUserHome(user){
     userpicDiv.appendChild(userpic);
     userpicDiv.classList.add("d-inline-block")
     //userpicDiv.classList.add("col-md-6");
-    userpic.classList.add("rounded-circle","shadow-lg", "p-3", "mb-5", "bg-white","w-75","h-75");
+    userpic.classList.add("shadow-lg", "p-3", "mb-5", "bg-white","w-30","h-30");
     userpictextDiv.appendChild(userpicDiv);
 
     //div text or coltext
@@ -525,8 +537,8 @@ function renderSearchHome() {
     searchHeader.classList.add("justify-content-center","text-center","shadow", "p-3", "mb-5", "bg-white", "rounded");
     document.querySelector("body").append(searchHeader);
     let searchDiv = document.createElement("div");
-    let searchTypes = ['Name', 'Rating', 'Difficulty'];
-    let listeners = [searchByName, searchByRating, searchByDifficulty];
+    let searchTypes = ['Name', 'Difficulty'];
+    let listeners = [searchByName, searchByDifficulty];
     for (let i = 0; i < searchTypes.length; i++){
         let itemDiv = document.createElement("div");
         itemDiv.classList.add("row","align-items-center");
@@ -564,6 +576,7 @@ const searchByName = async function() {
     }
 }
 let bad = false;
+
 const renderAddRoute = async function(location) {
     derenderPage();
     let locationId = location.id;
@@ -693,10 +706,6 @@ const renderUpdateRoute = async function(route) {
 
 }
 
-const searchByRating = async function() {
-    console.log('5');
-}
-
 const searchByDifficulty = async function() {
     let diffInput = document.querySelector("#DifficultySearch").value;
     derenderPage();
@@ -749,9 +758,11 @@ const renderRoute = async function(route) {
     derenderPage();
     console.log(route);
     let routeDiv = document.createElement("div");
+        routeDiv.classList.add("d-inline-block");
         let routeHeader = document.createElement("h2");
         routeHeader.innerText = `${route.name}`;
         let routeImage = document.createElement("img");
+        routeImage.classList.add("shadow-lg", "p-3", "mb-5", "bg-white","w-30","h-30");
         routeImage.id = "routeImage";
         if (route.photo_url!=null)
             routeImage.src = `${route.photo_url}`;
@@ -795,7 +806,6 @@ async function renderTickSearch(user){
     searchBtn.type = "Button";
     searchBtn.value = "Tick Route"; 
     searchBtn.addEventListener("click", function() {tickCompare(tickSearch.value, user)});
-    searchBtn.addEventListener("click", function() {console.log(tickSearch.value)});
 
     //
     tickDiv.append(tickDescription, tickSearch, searchBtn);
@@ -909,7 +919,6 @@ const renderTickList = async function(user){
     for (let tick of ticks){
         for (let route of allRoutes){
             if (tick.routeId == route.route_id){
-                console.log(route.route_id);
                 let routeItem = document.createElement("tr");
                 let tdName = document.createElement("td");
                 tdName.innerText = route.name;
@@ -983,6 +992,26 @@ async function getLocations() {
                 body: null
             })
             let data = await response.json();
+            return data;
+
+    } catch (error) {
+        console.error(`Error is ${error}`)
+    }
+}
+
+async function getAllUsers() {
+    const path = '/api/v1/users';
+    const url = urlBase + path;
+    try {
+        let response = await fetch(
+            url,
+            {
+                method: "GET",
+                headers: new Headers({'content-type':'application/json'}),
+                body: null
+            })
+            let data = await response.json();
+            console.log(data);
             return data;
 
     } catch (error) {
